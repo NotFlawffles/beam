@@ -2,9 +2,9 @@
 
 #include <string>
 
-namespace Beam::IO {
+namespace Beam::Debug::Traits {
 class Display {
   public:
     virtual std::string debug() = 0;
 };
-} // namespace Beam::IO
+} // namespace Beam::Debug::Traits

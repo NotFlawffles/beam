@@ -1,6 +1,6 @@
-#include "../../../include/beam/text/span.hpp"
+#include "../../../../include/beam/io/string/span.hpp"
 
-std::string Beam::Text::Span::debug() {
+std::string Beam::IO::String::Span::debug() {
     return "Span(stream: \"" + getStream() + "\", " +
            "index: " + std::to_string(*getIndex()) +
            ", row: " + std::to_string(*getRow()) +

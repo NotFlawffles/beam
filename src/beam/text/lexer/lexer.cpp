@@ -484,9 +484,9 @@ Beam::Text::Lexer::Lexer::advanceWithResult(
     return result;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Debug::DisplayableChar>
+Beam::Diagnostic::Result<Beam::Debug::Types::Char>
 Beam::Text::Lexer::Lexer::lexEscapeSequence() {
-    return std::unordered_map<char, Debug::DisplayableChar> {
+    return std::unordered_map<char, Debug::Types::Char> {
         {'a', '\a'}, {'b', '\b'},  {'f', '\f'},  {'n', '\n'},  {'r', '\r'},
         {'v', '\v'}, {'\\', '\\'}, {'\'', '\''}, {'\"', '\"'}, {'?', '\?'}}
         .at(advance());

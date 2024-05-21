@@ -1,14 +1,14 @@
 #pragma once
 
+#include "../../debug/types/char.hpp"
 #include "../../diagnostic/result.hpp"
-#include "../debug/displayable_char.hpp"
-#include "../source.hpp"
+#include "../../io/file/source.hpp"
 #include "token.hpp"
 
 namespace Beam::Text::Lexer {
 class Lexer {
   public:
-    Lexer(const Text::Source& source)
+    Lexer(const IO::File::Source& source)
         : source(source),
           span("lexer", 0, 1, 1,
                source.getReader().getValue().readAll().length()),
@@ -22,16 +22,16 @@ class Lexer {
         lexUnhandled(), lexEndOfFile(),
         advanceWithResult(const Diagnostic::Result<Token>& result);
 
-    Diagnostic::Result<Debug::DisplayableChar> lexEscapeSequence();
+    Diagnostic::Result<Debug::Types::Char> lexEscapeSequence();
 
     char skipWhitespace();
     char advance();
 
   private:
-    const Text::Source source;
+    const IO::File::Source source;
 
   public:
-    Span span;
+    IO::String::Span span;
     char current;
 };
 } // namespace Beam::Text::Lexer

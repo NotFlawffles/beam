@@ -3,12 +3,13 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../io/display.hpp"
+#include "../traits/display.hpp"
 
-namespace Beam::Text::Debug {
+namespace Beam::Debug::Types {
 template<typename T,
-         typename = std::enable_if_t<std::is_base_of<IO::Display, T>::value>>
-class DisplayableVector: public std::vector<T>, IO::Display {
+         typename =
+             std::enable_if_t<std::is_base_of<Traits::Display, T>::value>>
+class Vector: public std::vector<T>, Traits::Display {
   public:
     std::string debug() override {
         auto content = std::string("DisplayableVector({");
@@ -25,4 +26,4 @@ class DisplayableVector: public std::vector<T>, IO::Display {
         return content;
     }
 };
-} // namespace Beam::Text::Debug
+} // namespace Beam::Debug::Types

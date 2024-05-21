@@ -1,7 +1,8 @@
-#include "../../../include/beam/text/utils.hpp"
+#include "../../../../include/beam/io/string/utils.hpp"
 
-std::vector<std::string> Beam::Text::Utils::splitString(const std::string& str,
-                                                        const char& delimiter) {
+std::vector<std::string>
+Beam::IO::String::Utils::splitString(const std::string& str,
+                                     const char& delimiter) {
     std::vector<std::string> splits;
 
     std::size_t position = 0, previous = 0;

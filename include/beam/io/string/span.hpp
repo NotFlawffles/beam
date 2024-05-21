@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "../io/display.hpp"
+#include "../../debug/traits/display.hpp"
 
-namespace Beam::Text {
-class Span: IO::Display {
+namespace Beam::IO::String {
+class Span: Debug::Traits::Display {
   public:
     Span(const std::string& stream, const unsigned long long int& index,
          const unsigned long long int& row,
@@ -39,4 +39,4 @@ class Span: IO::Display {
     const std::string stream;
     unsigned long long int index, row, column, length;
 };
-} // namespace Beam::Text
+} // namespace Beam::IO::String

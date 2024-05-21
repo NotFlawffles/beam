@@ -5,10 +5,10 @@
 namespace Beam::Text::Parser::Expression {
 class Expression;
 
-class BinaryExpression {
+class Binary {
   public:
-    BinaryExpression(Expression* left, const Lexer::Token::Type& _operator,
-                     Expression* right)
+    Binary(Expression* left, const Lexer::Token::Type& _operator,
+           Expression* right)
         : left(left), right(right), _operator(_operator) {}
 
     const Expression* getLeft() const { return left; }

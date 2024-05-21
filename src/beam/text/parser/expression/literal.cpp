@@ -1,7 +1,7 @@
-#include "../../../../../include/beam/text/parser/expression/literal_expression.hpp"
+#include "../../../../../include/beam/text/parser/expression/literal.hpp"
 
 template<typename T>
-T Beam::Text::Parser::Expression::LiteralExpression::getValue() const {
+T Beam::Text::Parser::Expression::Literal::getValue() const {
     switch (type) {
         case LiteralExpressionTypeName:
             return nameValue;
@@ -23,8 +23,7 @@ T Beam::Text::Parser::Expression::LiteralExpression::getValue() const {
     }
 }
 
-std::string
-Beam::Text::Parser::Expression::LiteralExpression::getTypeAsString() const {
+std::string Beam::Text::Parser::Expression::Literal::getTypeAsString() const {
     switch (type) {
         case LiteralExpressionTypeName:
             return "LiteralExpressionTypeString";

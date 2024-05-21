@@ -5,7 +5,7 @@
 namespace Beam::Text::Parser::Expression {
 class Expression;
 
-class LiteralExpression {
+class Literal {
   public:
     enum Type {
         LiteralExpressionTypeName,
@@ -15,19 +15,19 @@ class LiteralExpression {
         LiteralExpressionTypeString
     };
 
-    LiteralExpression(const std::string& value, bool isString)
+    Literal(const std::string& value, bool isString)
         : type(isString ? LiteralExpressionTypeString
                         : LiteralExpressionTypeName) {
         isString ? stringValue.assign(value) : nameValue.assign(value);
     }
 
-    explicit LiteralExpression(const std::size_t& value)
+    explicit Literal(const std::size_t& value)
         : type(LiteralExpressionTypeInteger), integerValue(value) {}
 
-    explicit LiteralExpression(const float& value)
+    explicit Literal(const float& value)
         : type(LiteralExpressionTypeFloat), floatValue(value) {}
 
-    explicit LiteralExpression(const char& value)
+    explicit Literal(const char& value)
         : type(LiteralExpressionTypeCharacter), characterValue(value) {}
 
     template<typename T> T getValue() const;

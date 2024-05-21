@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../io/display.hpp"
-#include "../text/span.hpp"
+#include "../debug/traits/display.hpp"
+#include "../io/string/span.hpp"
 
 namespace Beam::Diagnostic {
-class Error: IO::Display {
+class Error: Debug::Traits::Display {
   public:
     enum Type : unsigned char {
         ErrorTypeFileNotFound,
@@ -22,7 +22,7 @@ class Error: IO::Display {
         ErrorIconCount
     };
 
-    Error(const Type& type, const Icon& icon, const Text::Span& span,
+    Error(const Type& type, const Icon& icon, const IO::String::Span& span,
           const std::string& message)
         : type(type), icon(icon), span(span), message(message) {}
 
@@ -40,7 +40,7 @@ class Error: IO::Display {
 
     const Type type;
     const Icon icon;
-    Text::Span span;
+    IO::String::Span span;
     const std::string message;
 };
 } // namespace Beam::Diagnostic

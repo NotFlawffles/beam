@@ -5,9 +5,9 @@
 namespace Beam::Text::Parser::Expression {
 class Expression;
 
-class UnaryExpression {
+class Unary {
   public:
-    UnaryExpression(const Lexer::Token::Type& _operator, Expression* expression)
+    Unary(const Lexer::Token::Type& _operator, Expression* expression)
         : _operator(_operator), expression(expression) {}
 
     Lexer::Token::Type getOperator() const { return _operator; }

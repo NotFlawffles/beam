@@ -1,8 +1,8 @@
 #pragma once
 
-#include "binary_expression.hpp"
-#include "literal_expression.hpp"
-#include "unary_expression.hpp"
+#include "binary.hpp"
+#include "literal.hpp"
+#include "unary.hpp"
 
 namespace Beam::Text::Parser::Expression {
 class Expression {
@@ -15,15 +15,15 @@ class Expression {
 
     explicit Expression(const Type& type): type(type) {}
 
-    void addBinaryExpression(BinaryExpression* binaryExpression) {
+    void addBinary(Binary* binaryExpression) {
         this->binaryExpression = binaryExpression;
     }
 
-    void addUnaryExpression(UnaryExpression* unaryExpression) {
+    void addUnary(Unary* unaryExpression) {
         this->unaryExpression = unaryExpression;
     }
 
-    void addLiteralExpression(LiteralExpression* literalExpression) {
+    void addLiteral(Literal* literalExpression) {
         this->literalExpression = literalExpression;
     }
 
@@ -34,8 +34,8 @@ class Expression {
   private:
     const Type type;
 
-    BinaryExpression* binaryExpression;
-    UnaryExpression* unaryExpression;
-    LiteralExpression* literalExpression;
+    Binary* binaryExpression;
+    Unary* unaryExpression;
+    Literal* literalExpression;
 };
 } // namespace Beam::Text::Parser::Expression

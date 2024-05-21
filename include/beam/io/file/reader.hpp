@@ -3,12 +3,12 @@
 #include <filesystem>
 #include <fstream>
 
-#include "../diagnostic/error.hpp"
-#include "../diagnostic/result.hpp"
-#include "display.hpp"
+#include "../../debug/traits/display.hpp"
+#include "../../diagnostic/error.hpp"
+#include "../../diagnostic/result.hpp"
 
-namespace Beam::IO {
-class Reader: Beam::IO::Display {
+namespace Beam::IO::File {
+class Reader: Debug::Traits::Display {
   public:
     Reader(const std::filesystem::path& path, const std::string& content)
         : path(path), content(content) {}
@@ -24,7 +24,7 @@ class Reader: Beam::IO::Display {
     const std::string content;
 };
 
-template<typename Derived> class ReaderBase: public Beam::IO::Display {
+template<typename Derived> class ReaderBase: public Debug::Traits::Display {
   public:
     static Diagnostic::Result<Derived> New(const char* executableName,
                                            const std::filesystem::path& path) {
@@ -35,15 +35,15 @@ template<typename Derived> class ReaderBase: public Beam::IO::Display {
             return Diagnostic::Error(
                 Diagnostic::Error::Type::ErrorTypeFileNotFound,
                 Diagnostic::Error::Icon::ErrorIconFileQuestionMark,
-                Text::Span("command line input", fileNameStart, 1,
-                           fileNameStart + 1, pathAsString.length()),
+                IO::String::Span("command line input", fileNameStart, 1,
+                                 fileNameStart + 1, pathAsString.length()),
                 "could not find file `" + pathAsString + '`');
         } else if (!std::filesystem::is_regular_file(path)) {
             return Diagnostic::Error(
                 Diagnostic::Error::Type::ErrorTypeFileNotRegular,
                 Diagnostic::Error::Icon::ErrorIconFileCross,
-                Text::Span("command line input", fileNameStart, 1,
-                           fileNameStart + 1, pathAsString.length()),
+                IO::String::Span("command line input", fileNameStart, 1,
+                                 fileNameStart + 1, pathAsString.length()),
                 "specified file is not a regular `" + pathAsString + '`');
         } else if ((std::filesystem::status(path).permissions() &
                     std::filesystem::perms::others_read) ==
@@ -51,8 +51,8 @@ template<typename Derived> class ReaderBase: public Beam::IO::Display {
             return Diagnostic::Error(
                 Diagnostic::Error::Type::ErrorTypeFileNotReadable,
                 Diagnostic::Error::Icon::ErrorIconFileLock,
-                Text::Span("command line input", fileNameStart, 1,
-                           fileNameStart + 1, pathAsString.length()),
+                IO::String::Span("command line input", fileNameStart, 1,
+                                 fileNameStart + 1, pathAsString.length()),
                 "could not read file `" + pathAsString + '`');
         }
 
@@ -64,4 +64,4 @@ template<typename Derived> class ReaderBase: public Beam::IO::Display {
 
     // Other member functions and variables
 };
-} // namespace Beam::IO
+} // namespace Beam::IO::File

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../../io/display.hpp"
-#include "../span.hpp"
+#include "../../debug/traits/display.hpp"
+#include "../../io/string/span.hpp"
 
 namespace Beam::Text::Lexer {
-class Token: IO::Display {
+class Token: Debug::Traits::Display {
   public:
     enum Type {
         TokenTypeIdentifier,
@@ -58,10 +58,12 @@ class Token: IO::Display {
         TokenTypeEndOfFile
     };
 
-    Token(const Type& type, const Text::Span& span, const std::string value)
+    Token(const Type& type, const IO::String::Span& span,
+          const std::string value)
         : type(type), span(span), value(value) {}
 
-    Token(const Type& type, const Text::Span& span): type(type), span(span) {}
+    Token(const Type& type, const IO::String::Span& span)
+        : type(type), span(span) {}
 
     Token(): type(Type::TokenTypeIdentifier) {}
 
@@ -75,7 +77,7 @@ class Token: IO::Display {
 
   private:
     const Type type;
-    Span span;
+    IO::String::Span span;
     const std::string value;
 };
 } // namespace Beam::Text::Lexer
