@@ -3,20 +3,23 @@
 #include <string>
 
 #include "../../io/format/display/debugger.hpp"
+#include "../../io/format/display/formatter.hpp"
 
 namespace Beam::IO::String {
-class Span: Format::Display::Debugger {
+class Span: Format::Display::Formatter, Format::Display::Debugger {
   public:
-    Span(const std::string& stream, const unsigned long long int& index,
-         const unsigned long long int& row,
+    Span(const std::string& stream, const std::string& path,
+         const unsigned long long int& index, const unsigned long long int& row,
          const unsigned long long int& column,
          const unsigned long long int& length)
-        : stream(stream), index(index), row(row), column(column),
+        : stream(stream), path(path), index(index), row(row), column(column),
           length(length) {}
 
     explicit Span() {}
 
     const std::string getStream() const { return stream; }
+
+    const std::string getPath() const { return path; }
 
     unsigned long long int* getIndex() { return &index; }
 
@@ -33,10 +36,16 @@ class Span: Format::Display::Debugger {
         return *this;
     }
 
+    Span withColumnOf(const unsigned long long int& newColumn) {
+        column = newColumn;
+        return *this;
+    }
+
+    std::string format() override;
     std::string debug() override;
 
   private:
-    const std::string stream;
+    const std::string stream, path;
     unsigned long long int index, row, column, length;
 };
 } // namespace Beam::IO::String

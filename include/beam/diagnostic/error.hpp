@@ -1,10 +1,13 @@
 #pragma once
 
+#include <filesystem>
+
 #include "../io/format/display/debugger.hpp"
+#include "../io/format/display/formatter.hpp"
 #include "../io/string/span.hpp"
 
 namespace Beam::Diagnostic {
-class Error: IO::Format::Display::Debugger {
+class Error: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
   public:
     enum Type : unsigned char {
         ErrorTypeFileNotFound,
@@ -30,9 +33,10 @@ class Error: IO::Format::Display::Debugger {
         : type(Type::ErrorTypeFileNotFound),
           icon(Icon::ErrorIconFileQuestionMark) {}
 
-    std::string debug() override;
-
     unsigned char getNumber() const { return type; }
+
+    std::string format() override;
+    std::string debug() override;
 
   private:
     std::string getTypeAsString() const;

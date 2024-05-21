@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../../io/format/display/debugger.hpp"
+#include "../../io/format/display/formatter.hpp"
 #include "../../io/string/span.hpp"
 
 namespace Beam::Text::Lexer {
-class Token: IO::Format::Display::Debugger {
+class Token: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
   public:
     enum Type {
         TokenTypeIdentifier,
@@ -72,6 +73,8 @@ class Token: IO::Format::Display::Debugger {
     std::string getValue() const { return value; }
 
     std::string getTypeAsString() const;
+
+    std::string format() override { return debug(); };
 
     std::string debug() override;
 

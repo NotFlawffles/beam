@@ -3,6 +3,11 @@
 
 #include "../../../include/beam/diagnostic/error.hpp"
 
+std::string Beam::Diagnostic::Error::format() {
+    return getIcon() + '\t' + getTypeAsString() + ' ' + span.format() + ": " +
+           message;
+}
+
 std::string Beam::Diagnostic::Error::debug() {
     return "Error(type: " + getTypeAsString() + ", icon: \"" + getIcon() +
            "\", span: " + span.debug() + ", message: \"" + message + "\")";

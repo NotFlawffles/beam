@@ -10,7 +10,7 @@ class Lexer {
   public:
     Lexer(const IO::File::Source& source)
         : source(source),
-          span("lexer", 0, 1, 1,
+          span("lexer", source.getPath().string() + ':', 0, 1, 1,
                source.getReader().getValue().readAll().length()),
           current(source.getReader().getValue().readAll()[*span.getIndex()]) {}
 

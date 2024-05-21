@@ -115,7 +115,7 @@ Beam::Text::Lexer::Lexer::lexNumber() {
                 return advanceWithResult(Diagnostic::Error(
                     Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
                     Diagnostic::Error::Icon::ErrorIconProgramCross,
-                    start.withLengthOf(value.length() + 1), "odd '.'"));
+                    span.clone().withLengthOf(value.length() + 1), "odd '.'"));
             }
 
             type = Token::Type::TokenTypeFloat;
@@ -129,7 +129,10 @@ Beam::Text::Lexer::Lexer::lexNumber() {
         return Diagnostic::Error(
             Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
             Diagnostic::Error::Icon::ErrorIconProgramCross,
-            start.withLengthOf(value.length()), "odd '.'");
+            span.clone()
+                .withColumnOf(*span.getColumn() - 1)
+                .withLengthOf(value.length()),
+            "odd '.'");
 
     return Token(type, start.withLengthOf(value.length()), value);
 }
@@ -256,14 +259,17 @@ Beam::Text::Lexer::Lexer::lexSlash() {
                 if (advance() == '*') {
                     if (advance() == '/') {
                         break;
-                    } else if (current == '\0') {
-                        return Diagnostic::Error(
-                            Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
-                            Diagnostic::Error::Icon::ErrorIconProgramCross,
-                            start.withLengthOf(*start.getColumn() -
-                                               *span.getColumn()),
-                            "unterminated multi-line comment sequence");
                     }
+                } else if (current == '\0') {
+                    return Diagnostic::Error(
+                        Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
+                        Diagnostic::Error::Icon::ErrorIconProgramCross,
+                        start.withLengthOf(*start.getColumn() -
+                                           *span.getColumn()),
+                        "unterminated multi-line comment sequence");
+                } else if (current == '\n') {
+                    *span.getRow() += 1;
+                    *span.getColumn() = 0;
                 }
             }
 
