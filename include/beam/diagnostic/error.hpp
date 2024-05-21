@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../debug/traits/display.hpp"
+#include "../io/format/display/debugger.hpp"
 #include "../io/string/span.hpp"
 
 namespace Beam::Diagnostic {
-class Error: Debug::Traits::Display {
+class Error: IO::Format::Display::Debugger {
   public:
     enum Type : unsigned char {
         ErrorTypeFileNotFound,

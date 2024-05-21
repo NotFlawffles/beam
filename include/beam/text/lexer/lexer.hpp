@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../debug/types/char.hpp"
 #include "../../diagnostic/result.hpp"
 #include "../../io/file/source.hpp"
+#include "../../io/format/types/char.hpp"
 #include "token.hpp"
 
 namespace Beam::Text::Lexer {

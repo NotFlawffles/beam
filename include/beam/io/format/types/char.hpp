@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../traits/display.hpp"
+#include "../display/debugger.hpp"
 #include <string>
 
 namespace Beam::Debug::Types {
-class Char: Traits::Display {
+class Char: IO::Format::Display::Debugger {
   public:
     Char(const char& value): value(value) {}
 

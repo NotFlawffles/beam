@@ -3,13 +3,13 @@
 #include <iostream>
 #include <type_traits>
 
-#include "../debug/traits/display.hpp"
+#include "../io/format/display/debugger.hpp"
 #include "error.hpp"
 
 namespace Beam::Diagnostic {
-template<typename V, typename = std::enable_if_t<
-                         std::is_base_of<Debug::Traits::Display, V>::value>>
-class Result: Debug::Traits::Display {
+template<typename V, typename = std::enable_if_t<std::is_base_of<
+                         IO::Format::Display::Debugger, V>::value>>
+class Result: IO::Format::Display::Debugger {
   public:
     Result(const V& value): value(value), hasValue(true) {}
 

@@ -3,12 +3,12 @@
 #include <filesystem>
 #include <fstream>
 
-#include "../../debug/traits/display.hpp"
 #include "../../diagnostic/error.hpp"
 #include "../../diagnostic/result.hpp"
+#include "../../io/format/display/debugger.hpp"
 
 namespace Beam::IO::File {
-class Reader: Debug::Traits::Display {
+class Reader: Format::Display::Debugger {
   public:
     Reader(const std::filesystem::path& path, const std::string& content)
         : path(path), content(content) {}
@@ -24,10 +24,11 @@ class Reader: Debug::Traits::Display {
     const std::string content;
 };
 
-template<typename Derived> class ReaderBase: public Debug::Traits::Display {
+template<typename Derived> class ReaderBase: public Format::Display::Debugger {
   public:
     static Diagnostic::Result<Derived> New(const char* executableName,
                                            const std::filesystem::path& path) {
+
         auto fileNameStart = std::string(executableName).length() + 1;
         const auto pathAsString = std::string(path);
 

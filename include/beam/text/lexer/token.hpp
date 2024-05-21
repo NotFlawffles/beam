@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../../debug/traits/display.hpp"
+#include "../../io/format/display/debugger.hpp"
 #include "../../io/string/span.hpp"
 
 namespace Beam::Text::Lexer {
-class Token: Debug::Traits::Display {
+class Token: IO::Format::Display::Debugger {
   public:
     enum Type {
         TokenTypeIdentifier,
