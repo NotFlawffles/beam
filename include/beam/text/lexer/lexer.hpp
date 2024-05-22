@@ -11,18 +11,18 @@ class Lexer {
     Lexer(const IO::File::Source& source)
         : source(source),
           span("lexer", source.getPath().string() + ':', 0, 1, 1,
-               source.getReader().getValue().readAll().length()),
-          current(source.getReader().getValue().readAll()[*span.getIndex()]) {}
+               source.getReader().getValue()->readAll().length()),
+          current(source.getReader().getValue()->readAll()[*span.getIndex()]) {}
 
-    Diagnostic::Result<Token> lexNext(), lexIdentifier(), lexNumber(),
+    Diagnostic::Result<Token*> lexNext(), lexIdentifier(), lexNumber(),
         lexCharacter(), lexString(), lexPlus(), lexMinus(), lexAsterisk(),
         lexSlash(), lexModulo(), lexAmpersand(), lexPipe(), lexCaret(),
         lexTilde(), lexLessThan(), lexGreaterThan(), lexExclamation(),
         lexAssign(), lexBrace(), lexComma(), lexColon(), lexSemiColon(),
         lexUnhandled(), lexEndOfFile(),
-        advanceWithResult(const Diagnostic::Result<Token>& result);
+        advanceWithResult(const Diagnostic::Result<Token*>& result);
 
-    Diagnostic::Result<Debug::Types::Char> lexEscapeSequence();
+    Diagnostic::Result<Debug::Types::Char*> lexEscapeSequence();
 
     char skipWhitespace();
     char advance();

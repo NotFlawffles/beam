@@ -1,62 +1,61 @@
 #pragma once
 
-#include "../../io/format/display/debugger.hpp"
-#include "../../io/format/display/formatter.hpp"
+#include "../../io/format/display.hpp"
 #include "../../io/string/span.hpp"
 
 namespace Beam::Text::Lexer {
-class Token: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
+class Token: IO::Format::Display {
   public:
-    enum Type {
-        TokenTypeIdentifier,
-        TokenTypeInteger,
-        TokenTypeFloat,
-        TokenTypeCharacter,
-        TokenTypeString,
+    enum class Type {
+        Identifier,
+        Integer,
+        Float,
+        Character,
+        String,
 
-        TokenTypePlus,
-        TokenTypeMinus,
-        TokenTypeAsterisk,
-        TokenTypeSlash,
-        TokenTypeModulo,
-        TokenTypeAmpersand,
-        TokenTypePipe,
-        TokenTypeCaret,
-        TokenTypeTilde,
-        TokenTypeDoubleLessThan,
-        TokenTypeDoubleGreaterThan,
-        TokenTypeExclamation,
-        TokenTypeAssign,
-        TokenTypeExclamationAssign,
-        TokenTypeDoubleAssign,
-        TokenTypeDoubleAmpersand,
-        TokenTypeDoublePipe,
-        TokenTypeLessThan,
-        TokenTypeGreaterThan,
-        TokenTypeLessThanAssign,
-        TokenTypeGreaterThanAssign,
-        TokenTypePlusAssign,
-        TokenTypeMinusAssign,
-        TokenTypeAsteriskAssign,
-        TokenTypeSlashAssign,
-        TokenTypeModuloAssign,
-        TokenTypeAmpersandAssign,
-        TokenTypePipeAssign,
-        TokenTypeCaretAssign,
-        TokenTypeDoubleLessThanAssign,
-        TokenTypeDoubleGreaterThanAssign,
+        Plus,
+        Minus,
+        Asterisk,
+        Slash,
+        Modulo,
+        Ampersand,
+        Pipe,
+        Caret,
+        Tilde,
+        DoubleLessThan,
+        DoubleGreaterThan,
+        Exclamation,
+        Assign,
+        ExclamationAssign,
+        DoubleAssign,
+        DoubleAmpersand,
+        DoublePipe,
+        LessThan,
+        GreaterThan,
+        LessThanAssign,
+        GreaterThanAssign,
+        PlusAssign,
+        MinusAssign,
+        AsteriskAssign,
+        SlashAssign,
+        ModuloAssign,
+        AmpersandAssign,
+        PipeAssign,
+        CaretAssign,
+        DoubleLessThanAssign,
+        DoubleGreaterThanAssign,
 
-        TokenTypeLeftParenthesis,
-        TokenTypeRightParenthesis,
-        TokenTypeLeftCurlyBrace,
-        TokenTypeRightCurlyBrace,
+        LeftParenthesis,
+        RightParenthesis,
+        LeftCurlyBrace,
+        RightCurlyBrace,
 
-        TokenTypeComma,
-        TokenTypeColon,
-        TokenTypeSemiColon,
+        Comma,
+        Colon,
+        SemiColon,
 
-        TokenTypeUnhandled,
-        TokenTypeEndOfFile
+        Unhandled,
+        EndOfFile
     };
 
     Token(const Type& type, const IO::String::Span& span,
@@ -66,7 +65,7 @@ class Token: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
     Token(const Type& type, const IO::String::Span& span)
         : type(type), span(span) {}
 
-    Token(): type(Type::TokenTypeIdentifier) {}
+    Token(): type(Type::Identifier) {}
 
     Type getType() const { return type; }
 

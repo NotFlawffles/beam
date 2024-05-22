@@ -1,45 +1,55 @@
 #pragma once
 
-#include "../../lexer/token.hpp"
+#include "expression.hpp"
 
 namespace Beam::Text::Parser::Expression {
-class Expression;
-
-class Literal {
+class Literal: public Expression {
   public:
-    enum Type {
-        LiteralExpressionTypeName,
-        LiteralExpressionTypeInteger,
-        LiteralExpressionTypeFloat,
-        LiteralExpressionTypeCharacter,
-        LiteralExpressionTypeString
-    };
+    enum class Type { Name, Integer, Float, Character, String };
 
-    Literal(const std::string& value, bool isString)
-        : type(isString ? LiteralExpressionTypeString
-                        : LiteralExpressionTypeName) {
-        isString ? stringValue.assign(value) : nameValue.assign(value);
+    Literal(const Type& literalType, const std::string& nameValue,
+            const std::string& stringValue, const std::size_t& integerValue,
+            const float& floatValue, const char& characterValue)
+        : Expression(Expression::Type::Literal), literalType(literalType),
+          nameValue(nameValue), stringValue(stringValue),
+          integerValue(integerValue), floatValue(floatValue),
+          characterValue(characterValue) {}
+
+    static Literal Name(const std::string& value) {
+        return Literal(Type::Name, value, value, value.length(), value.length(),
+                       value.at(0));
     }
 
-    explicit Literal(const std::size_t& value)
-        : type(LiteralExpressionTypeInteger), integerValue(value) {}
+    static Literal Integer(const std::size_t& value) {
+        return Literal(Type::Integer, "integer", std::to_string(value), value,
+                       value, value);
+    }
 
-    explicit Literal(const float& value)
-        : type(LiteralExpressionTypeFloat), floatValue(value) {}
+    static Literal Float(const float& value) {
+        return Literal(Type::Float, "float", std::to_string(value), value,
+                       value, value);
+    }
 
-    explicit Literal(const char& value)
-        : type(LiteralExpressionTypeCharacter), characterValue(value) {}
+    static Literal Character(const char& value) {
+        return Literal(Type::Character, "character", std::to_string(value),
+                       value, value, value);
+    }
 
-    template<typename T> T getValue() const;
-    std::string getTypeAsString() const;
+    static Literal String(const std::string& value) {
+        return Literal(Type::String, value, value, value.length(),
+                       value.length(), value.at(0));
+    }
+
+    std::string getLiteralTypeAsString() const, format() override,
+        debug() override;
 
   private:
-    const Type type;
+    const Type literalType;
 
     std::string nameValue;
+    std::string stringValue;
     std::size_t integerValue;
     float floatValue;
     char characterValue;
-    std::string stringValue;
 };
 } // namespace Beam::Text::Parser::Expression

@@ -1,21 +1,23 @@
 #pragma once
 
 #include "../../lexer/token.hpp"
+#include "expression.hpp"
 
 namespace Beam::Text::Parser::Expression {
-class Expression;
-
-class Unary {
+class Unary: Expression {
   public:
-    Unary(const Lexer::Token::Type& _operator, Expression* expression)
-        : _operator(_operator), expression(expression) {}
+    Unary(Expression* expression, const Lexer::Token& _operator)
+        : Expression(Expression::Type::Unary), expression(expression),
+          _operator(_operator) {}
 
-    Lexer::Token::Type getOperator() const { return _operator; }
+    Expression* getExpression() const { return expression; }
 
-    const Expression* getExpression() const { return expression; }
+    Lexer::Token getOperator() const { return _operator; }
+
+    std::string format() override, debug() override;
 
   private:
-    const Lexer::Token::Type _operator;
-    const Expression* expression;
+    Expression* expression;
+    Lexer::Token _operator;
 };
 } // namespace Beam::Text::Parser::Expression

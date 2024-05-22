@@ -2,140 +2,140 @@
 
 std::string Beam::Text::Lexer::Token::getTypeAsString() const {
     switch (type) {
-        case TokenTypeIdentifier:
+        case Type::Identifier:
             return "Identifier";
 
-        case TokenTypeInteger:
+        case Type::Integer:
             return "Integer";
 
-        case TokenTypeFloat:
+        case Type::Float:
             return "Float";
 
-        case TokenTypeCharacter:
+        case Type::Character:
             return "Character";
 
-        case TokenTypeString:
+        case Type::String:
             return "String";
 
-        case TokenTypePlus:
+        case Type::Plus:
             return "+";
 
-        case TokenTypeMinus:
+        case Type::Minus:
             return "-";
 
-        case TokenTypeAsterisk:
+        case Type::Asterisk:
             return "*";
 
-        case TokenTypeSlash:
+        case Type::Slash:
             return "/";
 
-        case TokenTypeModulo:
+        case Type::Modulo:
             return "%";
 
-        case TokenTypeAmpersand:
+        case Type::Ampersand:
             return "&";
 
-        case TokenTypePipe:
+        case Type::Pipe:
             return "|";
 
-        case TokenTypeCaret:
+        case Type::Caret:
             return "^";
 
-        case TokenTypeTilde:
+        case Type::Tilde:
             return "~";
 
-        case TokenTypeDoubleLessThan:
+        case Type::DoubleLessThan:
             return "<<";
 
-        case TokenTypeDoubleGreaterThan:
+        case Type::DoubleGreaterThan:
             return ">>";
 
-        case TokenTypeExclamation:
+        case Type::Exclamation:
             return "!";
 
-        case TokenTypeAssign:
+        case Type::Assign:
             return "=";
 
-        case TokenTypeExclamationAssign:
+        case Type::ExclamationAssign:
             return "!=";
 
-        case TokenTypeDoubleAssign:
+        case Type::DoubleAssign:
             return "==";
 
-        case TokenTypeDoubleAmpersand:
+        case Type::DoubleAmpersand:
             return "&&";
 
-        case TokenTypeDoublePipe:
+        case Type::DoublePipe:
             return "||";
 
-        case TokenTypeLessThan:
+        case Type::LessThan:
             return "<";
 
-        case TokenTypeGreaterThan:
+        case Type::GreaterThan:
             return ">";
 
-        case TokenTypeLessThanAssign:
+        case Type::LessThanAssign:
             return "<=";
 
-        case TokenTypeGreaterThanAssign:
+        case Type::GreaterThanAssign:
             return ">=";
 
-        case TokenTypePlusAssign:
+        case Type::PlusAssign:
             return "+=";
 
-        case TokenTypeMinusAssign:
+        case Type::MinusAssign:
             return "-=";
 
-        case TokenTypeAsteriskAssign:
+        case Type::AsteriskAssign:
             return "*=";
 
-        case TokenTypeSlashAssign:
+        case Type::SlashAssign:
             return "/=";
 
-        case TokenTypeModuloAssign:
+        case Type::ModuloAssign:
             return "%=";
 
-        case TokenTypeAmpersandAssign:
+        case Type::AmpersandAssign:
             return "&=";
 
-        case TokenTypePipeAssign:
+        case Type::PipeAssign:
             return "|=";
 
-        case TokenTypeCaretAssign:
+        case Type::CaretAssign:
             return "^=";
 
-        case TokenTypeDoubleLessThanAssign:
+        case Type::DoubleLessThanAssign:
             return "<<=";
 
-        case TokenTypeDoubleGreaterThanAssign:
+        case Type::DoubleGreaterThanAssign:
             return ">>=";
 
-        case TokenTypeLeftParenthesis:
+        case Type::LeftParenthesis:
             return "(";
 
-        case TokenTypeRightParenthesis:
+        case Type::RightParenthesis:
             return ")";
 
-        case TokenTypeLeftCurlyBrace:
+        case Type::LeftCurlyBrace:
             return "{";
 
-        case TokenTypeRightCurlyBrace:
+        case Type::RightCurlyBrace:
             return "}";
 
-        case TokenTypeComma:
+        case Type::Comma:
             return ",";
 
-        case TokenTypeColon:
+        case Type::Colon:
             return ":";
 
-        case TokenTypeSemiColon:
+        case Type::SemiColon:
             return ";";
 
-        case TokenTypeUnhandled:
-            return "TokenTypeUnhandled";
+        case Type::Unhandled:
+            return "Type::Unhandled";
 
-        case TokenTypeEndOfFile:
-            return "TokenTypeEndOfFile";
+        case Type::EndOfFile:
+            return "Type::EndOfFile";
 
         default:
             return "Unreachable";

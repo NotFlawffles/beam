@@ -2,11 +2,10 @@
 
 #include <string>
 
-#include "../../io/format/display/debugger.hpp"
-#include "../../io/format/display/formatter.hpp"
+#include "../../io/format/display.hpp"
 
 namespace Beam::IO::String {
-class Span: Format::Display::Formatter, Format::Display::Debugger {
+class Span: Format::Display {
   public:
     Span(const std::string& stream, const std::string& path,
          const unsigned long long int& index, const unsigned long long int& row,
@@ -41,8 +40,7 @@ class Span: Format::Display::Formatter, Format::Display::Debugger {
         return *this;
     }
 
-    std::string format() override;
-    std::string debug() override;
+    std::string format() override, debug() override;
 
   private:
     const std::string stream, path;

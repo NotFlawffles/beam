@@ -3,18 +3,20 @@
 #include <iostream>
 #include <type_traits>
 
-#include "../io/format/display/debugger.hpp"
-#include "../io/format/display/formatter.hpp"
+#include "../io/format/display.hpp"
 #include "error.hpp"
 
 namespace Beam::Diagnostic {
-template<typename V, typename = std::enable_if_t<std::is_base_of<
-                         IO::Format::Display::Debugger, V>::value>>
-class Result: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
+template<
+    typename V,
+    typename = std::enable_if_t<
+        std::is_pointer<V>::value &&
+        std::is_base_of<IO::Format::Display, std::remove_pointer_t<V>>::value>>
+class Result: IO::Format::Display {
   public:
     Result(const V& value): value(value), hasValue(true) {}
 
-    Result(const Error& error): error(error), hasValue(false) {}
+    Result(Error* error): error(error), hasValue(false) {}
 
     bool isSuccess() const { return hasValue; }
 
@@ -22,19 +24,19 @@ class Result: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
 
     V getValue() const { return value; }
 
-    Error getError() const { return error; }
+    Error* getError() const { return error; }
 
     std::string format() override {
-        return isSuccess() ? getValue().format() : getError().format();
+        return isSuccess() ? getValue()->format() : getError()->format();
     };
 
     std::string debug() override {
         auto content = std::string();
 
         if (isSuccess()) {
-            content.append("Success(value: " + getValue().debug());
+            content.append("Success(value: " + getValue()->debug());
         } else {
-            content.append("Failure(error: " + getError().debug());
+            content.append("Failure(error: " + getError()->debug());
         }
 
         content.push_back(')');
@@ -43,7 +45,7 @@ class Result: IO::Format::Display::Formatter, IO::Format::Display::Debugger {
 
   private:
     V value;
-    Error error;
+    Error* error;
     bool hasValue;
 };
 } // namespace Beam::Diagnostic

@@ -4,5 +4,4 @@
 
 let increase(target: int *, by: const int): int {
     return *target += by; // Just adds increases `target` by `by`
-} 1.
-.1
+}

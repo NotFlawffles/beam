@@ -1,46 +1,63 @@
 #include "../../../../../include/beam/text/parser/expression/literal.hpp"
+#include <cstdio>
 
-template<typename T>
-T Beam::Text::Parser::Expression::Literal::getValue() const {
-    switch (type) {
-        case LiteralExpressionTypeName:
-            return nameValue;
+std::string
+Beam::Text::Parser::Expression::Literal::getLiteralTypeAsString() const {
+    switch (literalType) {
+        case Type::Name:
+            return "Name";
 
-        case LiteralExpressionTypeInteger:
-            return integerValue;
+        case Type::Integer:
+            return "Integer";
 
-        case LiteralExpressionTypeFloat:
-            return floatValue;
+        case Type::Float:
+            return "Float";
 
-        case LiteralExpressionTypeCharacter:
-            return characterValue;
+        case Type::Character:
+            return "Character";
 
-        case LiteralExpressionTypeString:
-            return stringValue;
+        case Type::String:
+            return "String";
 
         default:
             return "Unreachable";
     }
 }
 
-std::string Beam::Text::Parser::Expression::Literal::getTypeAsString() const {
-    switch (type) {
-        case LiteralExpressionTypeName:
-            return "LiteralExpressionTypeString";
+std::string Beam::Text::Parser::Expression::Literal::format() {
+    return debug();
+}
 
-        case LiteralExpressionTypeInteger:
-            return "LiteralExpressionTypeInteger";
+std::string Beam::Text::Parser::Expression::Literal::debug() {
+    auto content =
+        std::string("Literal(type: " + getLiteralTypeAsString() + ", value: ");
 
-        case LiteralExpressionTypeFloat:
-            return "LiteralExpressionTypeFloat";
+    switch (literalType) {
+        case Type::Name:
+            content.append(nameValue);
+            break;
 
-        case LiteralExpressionTypeCharacter:
-            return "LiteralExpressionTypeCharacter";
+        case Type::Integer:
+            content.append(std::to_string(integerValue));
+            break;
 
-        case LiteralExpressionTypeString:
-            return "LiteralExpressionTypeString";
+        case Type::Float:
+            content.append(std::to_string(floatValue));
+            break;
+
+        case Type::Character:
+            content.append({'\'', characterValue, '\''});
+            break;
+
+        case Type::String:
+            content.append('\"' + stringValue + '\"');
+            break;
 
         default:
-            return "Unreachable";
+            content.append("Unreachable");
+            break;
     }
+
+    content.push_back(')');
+    return content;
 }

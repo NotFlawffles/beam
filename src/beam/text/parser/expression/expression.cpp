@@ -1,33 +1,16 @@
 #include "../../../../../include/beam/text/parser/expression/expression.hpp"
 
-template<typename T>
-T Beam::Text::Parser::Expression::Expression::getExpression() const {
-    switch (type) {
-        case ExpressionTypeBinary:
-            return binaryExpression;
-
-        case ExpressionTypeUnary:
-            return unaryExpression;
-
-        case ExpressionTypeLiteral:
-            return literalExpression;
-
-        default:
-            return "Unreachable";
-    }
-}
-
 std::string
 Beam::Text::Parser::Expression::Expression::getTypeAsString() const {
     switch (type) {
-        case ExpressionTypeBinary:
-            return "ExpressionTypeBinary";
+        case Type::Binary:
+            return "Binary";
 
-        case ExpressionTypeUnary:
-            return "ExpressionTypeUnary";
+        case Type::Unary:
+            return "Unary";
 
-        case ExpressionTypeLiteral:
-            return "ExpressionTypeLiteral";
+        case Type::Literal:
+            return "Literal";
 
         default:
             return "Unreachable";

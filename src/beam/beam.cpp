@@ -1,6 +1,10 @@
 #include "../../include/beam/compiler/compiler.hpp"
 #include "../../include/beam/io/file/source.hpp"
 
+#include "../../include/beam/text/parser/expression/literal.hpp"
+#include "../../include/beam/text/parser/syntax/block.hpp"
+#include "../../include/beam/text/parser/syntax/expression.hpp"
+
 #include <iostream>
 
 int main(int argc, char** argv) {
@@ -11,12 +15,12 @@ int main(int argc, char** argv) {
     std::size_t errorCount = 0;
 
     if (compilation.isSuccess()) {
-        for (auto error : compilation.getValue()) {
-            std::cerr << error.format() << std::endl;
+        for (auto error : *compilation.getValue()) {
+            std::cerr << error->format() << std::endl;
             errorCount++;
         }
     } else {
-        std::cerr << compilation.getError().format() << std::endl;
+        std::cerr << compilation.getError()->format() << std::endl;
         errorCount++;
     }
 
