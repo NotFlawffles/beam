@@ -6,13 +6,12 @@
 
 #include "../display.hpp"
 
-namespace Beam::Debug::Types {
-template<
-    typename T,
-    typename = std::enable_if_t<
-        std::is_pointer<T>::value &&
-        std::is_base_of<IO::Format::Display, std::remove_pointer_t<T>>::value>>
-class Vector: public std::vector<T>, IO::Format::Display {
+namespace Beam::IO::Format::Types {
+template<typename T,
+         typename = std::enable_if_t<
+             std::is_pointer<T>::value &&
+             std::is_base_of<Display, std::remove_pointer_t<T>>::value>>
+class Vector: public std::vector<T>, Display {
   public:
     Vector(const std::vector<T>& value): std::vector<T>(value) {}
 
@@ -20,7 +19,7 @@ class Vector: public std::vector<T>, IO::Format::Display {
         auto content = std::string("{");
 
         for (std::size_t index = 0; index < this->size(); index++) {
-            content.append(this->at(index)->debug());
+            content.append(this->at(index)->format());
 
             if (index + 1 < this->size()) {
                 content.append(", ");
@@ -53,4 +52,4 @@ class Vector: public std::vector<T>, IO::Format::Display {
         return content;
     }
 };
-} // namespace Beam::Debug::Types
+} // namespace Beam::IO::Format::Types

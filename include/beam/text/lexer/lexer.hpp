@@ -14,15 +14,17 @@ class Lexer {
                source.getReader().getValue()->readAll().length()),
           current(source.getReader().getValue()->readAll()[*span.getIndex()]) {}
 
-    Diagnostic::Result<Token*> lexNext(), lexIdentifier(), lexNumber(),
-        lexCharacter(), lexString(), lexPlus(), lexMinus(), lexAsterisk(),
-        lexSlash(), lexModulo(), lexAmpersand(), lexPipe(), lexCaret(),
-        lexTilde(), lexLessThan(), lexGreaterThan(), lexExclamation(),
-        lexAssign(), lexBrace(), lexComma(), lexColon(), lexSemiColon(),
-        lexUnhandled(), lexEndOfFile(),
-        advanceWithResult(const Diagnostic::Result<Token*>& result);
+    Diagnostic::Result<Token*, Diagnostic::Error*> lexNext(), lexIdentifier(),
+        lexNumber(), lexCharacter(), lexString(), lexPlus(), lexMinus(),
+        lexAsterisk(), lexSlash(), lexModulo(), lexAmpersand(), lexPipe(),
+        lexCaret(), lexTilde(), lexLessThan(), lexGreaterThan(),
+        lexExclamation(), lexAssign(), lexBrace(), lexComma(), lexColon(),
+        lexSemiColon(), lexUnhandled(), lexEndOfFile(),
+        advanceWithResult(
+            const Diagnostic::Result<Token*, Diagnostic::Error*>& result);
 
-    Diagnostic::Result<Debug::Types::Char*> lexEscapeSequence();
+    Diagnostic::Result<IO::Format::Types::Char*, Diagnostic::Error*>
+    lexEscapeSequence();
 
     char skipWhitespace();
     char advance();

@@ -13,6 +13,7 @@ class Error: IO::Format::Display {
         ErrorTypeFileNotRegular,
         ErrorTypeFileNotReadable,
         ErrorTypeInvalidSyntax,
+        ErrorTypeUnexpectedToken,
         ErrorTypeCount
     };
 
@@ -21,6 +22,7 @@ class Error: IO::Format::Display {
         ErrorIconFileCross,
         ErrorIconFileLock,
         ErrorIconProgramCross,
+        ErrorIconCurlyBracesCross,
         ErrorIconCount
     };
 

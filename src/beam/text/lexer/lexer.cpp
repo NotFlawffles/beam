@@ -5,7 +5,7 @@
 #include "../../../../include/beam/diagnostic/error.hpp"
 #include "../../../../include/beam/text/lexer/lexer.hpp"
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexNext() {
     switch (skipWhitespace()) {
         case '_':
@@ -88,7 +88,7 @@ Beam::Text::Lexer::Lexer::lexNext() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexIdentifier() {
     auto value = std::string();
     auto start = span.clone();
@@ -102,7 +102,7 @@ Beam::Text::Lexer::Lexer::lexIdentifier() {
                      start.withLengthOf(value.length()), value);
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexNumber() {
     auto value = std::string();
     auto start = span.clone();
@@ -136,7 +136,7 @@ Beam::Text::Lexer::Lexer::lexNumber() {
     return new Token(type, start.withLengthOf(value.length()), value);
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexCharacter() {
     char value;
     auto start = span.clone();
@@ -166,7 +166,7 @@ Beam::Text::Lexer::Lexer::lexCharacter() {
                      {value});
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexString() {
     auto value = std::string();
     auto start = span.clone();
@@ -195,7 +195,7 @@ Beam::Text::Lexer::Lexer::lexString() {
         Token::Type::String, start.withLengthOf(value.length()), value));
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexPlus() {
     auto start = span.clone().withLengthOf(1);
 
@@ -209,7 +209,7 @@ Beam::Text::Lexer::Lexer::lexPlus() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexMinus() {
     auto start = span.clone().withLengthOf(1);
 
@@ -223,7 +223,7 @@ Beam::Text::Lexer::Lexer::lexMinus() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexAsterisk() {
     auto start = span.clone().withLengthOf(1);
 
@@ -237,7 +237,7 @@ Beam::Text::Lexer::Lexer::lexAsterisk() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexSlash() {
     auto start = span.clone().withLengthOf(1);
 
@@ -280,7 +280,7 @@ Beam::Text::Lexer::Lexer::lexSlash() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexModulo() {
     auto start = span.clone().withLengthOf(1);
 
@@ -294,7 +294,7 @@ Beam::Text::Lexer::Lexer::lexModulo() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexAmpersand() {
     auto start = span.clone().withLengthOf(1);
 
@@ -312,7 +312,7 @@ Beam::Text::Lexer::Lexer::lexAmpersand() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexPipe() {
     auto start = span.clone().withLengthOf(1);
 
@@ -330,7 +330,7 @@ Beam::Text::Lexer::Lexer::lexPipe() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexCaret() {
     auto start = span.clone().withLengthOf(1);
 
@@ -344,12 +344,12 @@ Beam::Text::Lexer::Lexer::lexCaret() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexTilde() {
     return advanceWithResult(new Token(Token::Type::Tilde, span));
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexLessThan() {
     auto start = span.clone().withLengthOf(1);
 
@@ -375,7 +375,7 @@ Beam::Text::Lexer::Lexer::lexLessThan() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexGreaterThan() {
     auto start = span.clone().withLengthOf(1);
 
@@ -401,7 +401,7 @@ Beam::Text::Lexer::Lexer::lexGreaterThan() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexExclamation() {
     auto start = span.clone().withLengthOf(1);
 
@@ -415,7 +415,7 @@ Beam::Text::Lexer::Lexer::lexExclamation() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexAssign() {
     auto start = span.clone().withLengthOf(1);
 
@@ -429,7 +429,7 @@ Beam::Text::Lexer::Lexer::lexAssign() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexBrace() {
     switch (current) {
         case '(':
@@ -453,52 +453,54 @@ Beam::Text::Lexer::Lexer::lexBrace() {
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexComma() {
     return advanceWithResult(new Token(Token::Type::Comma, span));
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexColon() {
     return advanceWithResult(new Token(Token::Type::Colon, span));
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexSemiColon() {
     return advanceWithResult(new Token(Token::Type::SemiColon, span));
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexUnhandled() {
     return advanceWithResult(
         new Token(Token::Type::Unhandled, span, {current}));
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexEndOfFile() {
     return new Token(Token::Type::EndOfFile, span);
 }
 
-Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>
+Beam::Diagnostic::Result<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::advanceWithResult(
-    const Beam::Diagnostic::Result<Beam::Text::Lexer::Token*>& result) {
+    const Beam::Diagnostic::Result<Beam::Text::Lexer::Token*,
+                                   Beam::Diagnostic::Error*>& result) {
     advance();
     return result;
 }
 
-Beam::Diagnostic::Result<Beam::Debug::Types::Char*>
+Beam::Diagnostic::Result<Beam::IO::Format::Types::Char*,
+                         Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexEscapeSequence() {
-    return std::unordered_map<char, Debug::Types::Char*> {
-        {'a', new Debug::Types::Char('\a')},
-        {'b', new Debug::Types::Char('\b')},
-        {'f', new Debug::Types::Char('\f')},
-        {'n', new Debug::Types::Char('\n')},
-        {'r', new Debug::Types::Char('\r')},
-        {'v', new Debug::Types::Char('\v')},
-        {'\\', new Debug::Types::Char('\\')},
-        {'\'', new Debug::Types::Char('\'')},
-        {'\"', new Debug::Types::Char('\"')},
-        {'?', new Debug::Types::Char('\?')}}
+    return std::unordered_map<char, IO::Format::Types::Char*> {
+        {'a', new IO::Format::Types::Char('\a')},
+        {'b', new IO::Format::Types::Char('\b')},
+        {'f', new IO::Format::Types::Char('\f')},
+        {'n', new IO::Format::Types::Char('\n')},
+        {'r', new IO::Format::Types::Char('\r')},
+        {'v', new IO::Format::Types::Char('\v')},
+        {'\\', new IO::Format::Types::Char('\\')},
+        {'\'', new IO::Format::Types::Char('\'')},
+        {'\"', new IO::Format::Types::Char('\"')},
+        {'?', new IO::Format::Types::Char('\?')}}
         .at(advance());
 }
 

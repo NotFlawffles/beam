@@ -15,29 +15,29 @@ class Literal: public Expression {
           integerValue(integerValue), floatValue(floatValue),
           characterValue(characterValue) {}
 
-    static Literal Name(const std::string& value) {
-        return Literal(Type::Name, value, value, value.length(), value.length(),
-                       value.at(0));
+    static Literal* Name(const std::string& value) {
+        return new Literal(Type::Name, value, value, value.length(),
+                           value.length(), value.at(0));
     }
 
-    static Literal Integer(const std::size_t& value) {
-        return Literal(Type::Integer, "integer", std::to_string(value), value,
-                       value, value);
+    static Literal* Integer(const std::size_t& value) {
+        return new Literal(Type::Integer, "integer", std::to_string(value),
+                           value, value, value);
     }
 
-    static Literal Float(const float& value) {
-        return Literal(Type::Float, "float", std::to_string(value), value,
-                       value, value);
+    static Literal* Float(const float& value) {
+        return new Literal(Type::Float, "float", std::to_string(value), value,
+                           value, value);
     }
 
-    static Literal Character(const char& value) {
-        return Literal(Type::Character, "character", std::to_string(value),
-                       value, value, value);
+    static Literal* Character(const char& value) {
+        return new Literal(Type::Character, "character", std::to_string(value),
+                           value, value, value);
     }
 
-    static Literal String(const std::string& value) {
-        return Literal(Type::String, value, value, value.length(),
-                       value.length(), value.at(0));
+    static Literal* String(const std::string& value) {
+        return new Literal(Type::String, value, value, value.length(),
+                           value.length(), value.at(0));
     }
 
     std::string getLiteralTypeAsString() const, format() override,

@@ -73,7 +73,7 @@ class Token: IO::Format::Display {
 
     std::string getTypeAsString() const;
 
-    std::string format() override { return debug(); };
+    std::string format() override;
 
     std::string debug() override;
 

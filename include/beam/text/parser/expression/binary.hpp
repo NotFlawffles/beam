@@ -4,7 +4,7 @@
 #include "expression.hpp"
 
 namespace Beam::Text::Parser::Expression {
-class Binary: Expression {
+class Binary: public Expression {
   public:
     Binary(Expression* left, const Lexer::Token& _operator, Expression* right)
         : Expression(Expression::Type::Binary), left(left), right(right),

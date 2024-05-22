@@ -3,8 +3,8 @@
 #include "../display.hpp"
 #include <string>
 
-namespace Beam::Debug::Types {
-class Char: IO::Format::Display {
+namespace Beam::IO::Format::Types {
+class Char: Display {
   public:
     Char(const char& value): value(value) {}
 
@@ -17,4 +17,4 @@ class Char: IO::Format::Display {
   private:
     char value;
 };
-} // namespace Beam::Debug::Types
+} // namespace Beam::IO::Format::Types

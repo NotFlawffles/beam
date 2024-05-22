@@ -8,15 +8,16 @@
 
 namespace Beam::Diagnostic {
 template<
-    typename V,
+    typename V, typename E,
     typename = std::enable_if_t<
-        std::is_pointer<V>::value &&
-        std::is_base_of<IO::Format::Display, std::remove_pointer_t<V>>::value>>
+        std::is_pointer<V>::value && std::is_pointer<E>::value &&
+        std::is_base_of<IO::Format::Display, std::remove_pointer_t<V>>::value &&
+        std::is_base_of<IO::Format::Display, std::remove_pointer_t<E>>::value>>
 class Result: IO::Format::Display {
   public:
     Result(const V& value): value(value), hasValue(true) {}
 
-    Result(Error* error): error(error), hasValue(false) {}
+    Result(const E& error): error(error), hasValue(false) {}
 
     bool isSuccess() const { return hasValue; }
 
@@ -24,7 +25,7 @@ class Result: IO::Format::Display {
 
     V getValue() const { return value; }
 
-    Error* getError() const { return error; }
+    E getError() const { return error; }
 
     std::string format() override {
         return isSuccess() ? getValue()->format() : getError()->format();
@@ -45,7 +46,7 @@ class Result: IO::Format::Display {
 
   private:
     V value;
-    Error* error;
+    E error;
     bool hasValue;
 };
 } // namespace Beam::Diagnostic

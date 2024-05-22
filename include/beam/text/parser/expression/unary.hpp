@@ -4,7 +4,7 @@
 #include "expression.hpp"
 
 namespace Beam::Text::Parser::Expression {
-class Unary: Expression {
+class Unary: public Expression {
   public:
     Unary(Expression* expression, const Lexer::Token& _operator)
         : Expression(Expression::Type::Unary), expression(expression),

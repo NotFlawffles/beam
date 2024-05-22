@@ -25,7 +25,25 @@ Beam::Text::Parser::Expression::Literal::getLiteralTypeAsString() const {
 }
 
 std::string Beam::Text::Parser::Expression::Literal::format() {
-    return debug();
+    switch (literalType) {
+        case Type::Name:
+            return nameValue;
+
+        case Type::Integer:
+            return std::to_string(integerValue);
+
+        case Type::Float:
+            return std::to_string(floatValue);
+
+        case Type::Character:
+            return std::string({'\'', characterValue, '\''});
+
+        case Type::String:
+            return stringValue;
+
+        default:
+            return "Unreachable";
+    }
 }
 
 std::string Beam::Text::Parser::Expression::Literal::debug() {

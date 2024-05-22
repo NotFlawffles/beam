@@ -142,6 +142,10 @@ std::string Beam::Text::Lexer::Token::getTypeAsString() const {
     }
 }
 
+std::string Beam::Text::Lexer::Token::format() {
+    return getTypeAsString() + ": " + getValue();
+}
+
 std::string Beam::Text::Lexer::Token::debug() {
     return "Token(type: " + getTypeAsString() + ", span: " + span.debug() +
            ", value: \"" + getValue() + "\")";

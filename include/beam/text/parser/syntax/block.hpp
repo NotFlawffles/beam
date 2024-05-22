@@ -6,16 +6,18 @@
 #include "ast.hpp"
 
 namespace Beam::Text::Parser::Syntax {
-class Block: AbstractSyntaxTree {
+class Block: public AbstractSyntaxTree {
   public:
-    Block(const Debug::Types::Vector<AbstractSyntaxTree*>& value)
+    Block(const IO::Format::Types::Vector<AbstractSyntaxTree*>& value)
         : AbstractSyntaxTree(AbstractSyntaxTree::Type::Block), value(value) {}
 
-    Debug::Types::Vector<AbstractSyntaxTree*> getValue() const { return value; }
+    IO::Format::Types::Vector<AbstractSyntaxTree*> getValue() const {
+        return value;
+    }
 
     std::string format() override, debug() override;
 
   private:
-    Debug::Types::Vector<AbstractSyntaxTree*> value;
+    IO::Format::Types::Vector<AbstractSyntaxTree*> value;
 };
 } // namespace Beam::Text::Parser::Syntax

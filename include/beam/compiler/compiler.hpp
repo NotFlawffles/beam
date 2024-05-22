@@ -6,6 +6,7 @@
 #include "../io/format/types/vector.hpp"
 
 namespace Beam::Compiler {
-Diagnostic::Result<Debug::Types::Vector<Diagnostic::Error*>*>
-compile(const IO::File::Source& source);
+Diagnostic::Result<IO::Format::Types::Vector<Diagnostic::Error*>*,
+                   Diagnostic::Error*>
+compile(const IO::File::Source& source, const bool& debug);
 }

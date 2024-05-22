@@ -15,12 +15,13 @@ std::string Beam::Diagnostic::Error::debug() {
 
 std::string Beam::Diagnostic::Error::getTypeAsString() const {
     return std::array<std::string, Type::ErrorTypeCount + 1> {
-        "FileNotFound", "FileNotRegular", "FileNotReadable", "InvalidSyntax"}
+        "FileNotFound", "FileNotRegular", "FileNotReadable", "InvalidSyntax",
+        "UnexpectedToken"}
         .at(type);
 }
 
 std::string Beam::Diagnostic::Error::getIcon() const {
-    return std::array<std::string, Icon::ErrorIconCount + 1> {"", "󰮘",
-                                                              "󰈡", "󰺬"}
+    return std::array<std::string, Icon::ErrorIconCount + 1> {
+        "", "󰮘", "󰈡", "󰺬", ""}
         .at(icon);
 }

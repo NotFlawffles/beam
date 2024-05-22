@@ -2,28 +2,22 @@
 
 #include "../../../include/beam/compiler/compiler.hpp"
 #include "../../../include/beam/text/lexer/lexer.hpp"
+#include "../../../include/beam/text/parser/parser.hpp"
 
-Beam::Diagnostic::Result<Beam::Debug::Types::Vector<Beam::Diagnostic::Error*>*>
-Beam::Compiler::compile(const Beam::IO::File::Source& source) {
+Beam::Diagnostic::Result<
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*,
+    Beam::Diagnostic::Error*>
+Beam::Compiler::compile(const Beam::IO::File::Source& source,
+                        const bool& debug) {
     if (source.getReader().isFailure()) {
         return source.getReader().getError();
     }
 
     auto lexer = Beam::Text::Lexer::Lexer(source);
-    auto errors = new Debug::Types::Vector<Diagnostic::Error*>({});
+    auto parser = Beam::Text::Parser::Parser(&lexer);
+    auto tree = parser.parse();
 
-    while (true) {
-        auto current = lexer.lexNext();
+    std::cerr << (debug ? tree.debug() : tree.format()) << std::endl;
 
-        if (current.isFailure()) {
-            errors->push_back(current.getError());
-        } else {
-            if (current.getValue()->getType() ==
-                Beam::Text::Lexer::Token::Type::EndOfFile) {
-                break;
-            }
-        }
-    }
-
-    return errors;
+    return new IO::Format::Types::Vector<Diagnostic::Error*>({});
 }
