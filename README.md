@@ -5,7 +5,7 @@
 - [x] Debugger.
 - [x] Diagnosis, resulting and erroring systems.
 - [x] Lexer.
-- [ ] Parser.
+- [ ] Parser.   (ongoing)
 - [ ] Scoping; with typechecker.
 - [ ] Code generator / Interpreter (Not decided yet).
 ...
