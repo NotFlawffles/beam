@@ -2,11 +2,12 @@
 
 #include "../../lexer/token.hpp"
 #include "expression.hpp"
+#include "operator.hpp"
 
 namespace Beam::Text::Parser::Expression {
 class Binary: public Expression {
   public:
-    Binary(Expression* left, const Lexer::Token& _operator, Expression* right)
+    Binary(Expression* left, Operator* _operator, Expression* right)
         : Expression(Expression::Type::Binary), left(left), right(right),
           _operator(_operator) {}
 
@@ -14,12 +15,12 @@ class Binary: public Expression {
 
     Expression* getRight() const { return right; };
 
-    Lexer::Token getOperator() const { return _operator; }
+    Operator* getOperator() const { return _operator; }
 
     std::string format() override, debug() override;
 
   private:
     Expression *left, *right;
-    Lexer::Token _operator;
+    Operator* _operator;
 };
 } // namespace Beam::Text::Parser::Expression

@@ -5,6 +5,7 @@
 
 #include "../../../../include/beam/text/parser/expression/binary.hpp"
 #include "../../../../include/beam/text/parser/expression/literal.hpp"
+#include "../../../../include/beam/text/parser/expression/operator.hpp"
 #include "../../../../include/beam/text/parser/expression/unary.hpp"
 #include "../../../../include/beam/text/parser/parser.hpp"
 #include "../../../../include/beam/text/parser/syntax/primary/block.hpp"
@@ -135,11 +136,11 @@ Beam::Text::Parser::Parser::parseListExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -163,11 +164,11 @@ Beam::Text::Parser::Parser::parseAssignmentExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -185,11 +186,11 @@ Beam::Text::Parser::Parser::parseLogicalOrExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -207,11 +208,11 @@ Beam::Text::Parser::Parser::parseLogicalAndExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -228,11 +229,11 @@ Beam::Text::Parser::Parser::parseBitwiseOrExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -249,11 +250,11 @@ Beam::Text::Parser::Parser::parseBitwiseXorExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -271,11 +272,11 @@ Beam::Text::Parser::Parser::parseBitwiseAndExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -294,11 +295,11 @@ Beam::Text::Parser::Parser::parseEqualityExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -318,11 +319,11 @@ Beam::Text::Parser::Parser::parseRelationalExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -341,11 +342,11 @@ Beam::Text::Parser::Parser::parseShiftExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -363,11 +364,11 @@ Beam::Text::Parser::Parser::parseAdditiveExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -386,11 +387,11 @@ Beam::Text::Parser::Parser::parseMultiplicativeExpression() {
     if (current.isSuccess() &&
         std::find(targets.begin(), targets.end(),
                   current.getValue()->getType()) != targets.end()) {
-        auto _operator = current.getValue();
+        auto _operator = Expression::Operator::FromToken(*current.getValue());
         eat(targets);
         DefineAndReturnIfError(right, parseListExpression());
 
-        left = new Expression::Binary(left.getValue(), *_operator,
+        left = new Expression::Binary(left.getValue(), _operator,
                                       right.getValue());
     }
 
@@ -411,8 +412,9 @@ Beam::Text::Parser::Parser::parseUnaryExpression() {
                   _operator.getValue()->getType()) != targets.end()) {
         eat(targets);
 
-        return new Expression::Unary(parsePostfixExpression().getValue(),
-                                     *_operator.getValue());
+        return new Expression::Unary(
+            parsePostfixExpression().getValue(),
+            Expression::Operator::FromToken(*_operator.getValue()));
     }
 
     return parsePostfixExpression();
