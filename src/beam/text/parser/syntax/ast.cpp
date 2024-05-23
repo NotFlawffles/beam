@@ -3,11 +3,11 @@
 std::string
 Beam::Text::Parser::Syntax::AbstractSyntaxTree::getTypeAsString() const {
     switch (type) {
-        case Type::Block:
-            return "Block";
+        case Type::Primary:
+            return "Primary";
 
-        case Type::Expression:
-            return "Expression";
+        case Type::Statement:
+            return "Statement";
 
         default:
             return "Unreachable";

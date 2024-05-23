@@ -15,13 +15,12 @@ class Parser {
 
     Diagnostic::Result<Syntax::AbstractSyntaxTree*,
                        IO::Format::Types::Vector<Diagnostic::Error*>*>
-    parse(), parseBlock(const Lexer::Token::Type& until);
-
-    Diagnostic::Result<Syntax::AbstractSyntaxTree*, Diagnostic::Error*>
-    parseNext(), parseName(), parseExpression();
+    parse(), parseBlock(const Lexer::Token::Type& until), parseNext(),
+        parseName(), parseExpression(), parseReservedWord(),
+        parseConditionalStatement();
 
     Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                       Diagnostic::Error*>
+                       IO::Format::Types::Vector<Diagnostic::Error*>*>
     parseListExpression(), parseAssignmentExpression(),
         parseLogicalOrExpression(), parseLogicalAndExpression(),
         parseBitwiseOrExpression(), parseBitwiseXorExpression(),

@@ -1,14 +1,13 @@
 #pragma once
 
-#include "../expression/expression.hpp"
-#include "ast.hpp"
+#include "../../expression/expression.hpp"
+#include "primary.hpp"
 
-namespace Beam::Text::Parser::Syntax {
-class Expression: public AbstractSyntaxTree {
+namespace Beam::Text::Parser::Syntax::Primary {
+class Expression: public Primary {
   public:
     Expression(Beam::Text::Parser::Expression::Expression* value)
-        : AbstractSyntaxTree(AbstractSyntaxTree::Type::Expression),
-          value(value) {}
+        : Primary(Primary::Type::Expression), value(value) {}
 
     Beam::Text::Parser::Expression::Expression* getValue() const {
         return value;
@@ -19,4 +18,4 @@ class Expression: public AbstractSyntaxTree {
   private:
     Beam::Text::Parser::Expression::Expression* value;
 };
-} // namespace Beam::Text::Parser::Syntax
+} // namespace Beam::Text::Parser::Syntax::Primary

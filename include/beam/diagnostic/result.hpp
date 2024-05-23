@@ -19,6 +19,8 @@ class Result: IO::Format::Display {
 
     Result(const E& error): error(error), hasValue(false) {}
 
+    Result(): hasValue(false) {}
+
     bool isSuccess() const { return hasValue; }
 
     bool isFailure() const { return !hasValue; }

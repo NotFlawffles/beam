@@ -5,9 +5,11 @@
 namespace Beam::Text::Parser::Syntax {
 class AbstractSyntaxTree: IO::Format::Display {
   public:
-    enum class Type { Block, Expression };
+    enum class Type { Primary, Statement };
 
     AbstractSyntaxTree(const Type& type): type(type) {}
+
+    Type getType() const { return type; }
 
     std::string getTypeAsString() const;
 

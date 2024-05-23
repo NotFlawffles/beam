@@ -1,13 +1,14 @@
 #include <algorithm>
 #include <array>
+#include <cstring>
 #include <memory>
 
 #include "../../../../include/beam/text/parser/expression/binary.hpp"
 #include "../../../../include/beam/text/parser/expression/literal.hpp"
 #include "../../../../include/beam/text/parser/expression/unary.hpp"
 #include "../../../../include/beam/text/parser/parser.hpp"
-#include "../../../../include/beam/text/parser/syntax/block.hpp"
-#include "../../../../include/beam/text/parser/syntax/expression.hpp"
+#include "../../../../include/beam/text/parser/syntax/primary/block.hpp"
+#include "../../../../include/beam/text/parser/syntax/primary/expression.hpp"
 
 #define DefineAndReturnIfError(name, value)                                    \
     auto name = value;                                                         \
@@ -21,13 +22,10 @@ Beam::Text::Parser::Parser::parse() {
     return parseBlock(Lexer::Token::Type::EndOfFile);
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseNext() {
-    if (current.isFailure()) {
-        return current.getError();
-    }
-
     switch (current.getValue()->getType()) {
         case Lexer::Token::Type::Identifier:
             return parseName();
@@ -40,31 +38,22 @@ Beam::Text::Parser::Parser::parseNext() {
         case Lexer::Token::Type::Minus:
         case Lexer::Token::Type::Exclamation:
         case Lexer::Token::Type::Tilde:
+        case Lexer::Token::Type::LeftParenthesis:
             return parseExpression();
+
+        case Lexer::Token::Type::LeftCurlyBrace:
+            eat({current.getValue()->getType()});
+            return parseBlock(Lexer::Token::Type::RightCurlyBrace);
 
         default:
             eat({current.getValue()->getType()});
 
-            return new Diagnostic::Error(
-                Diagnostic::Error::Type::ErrorTypeUnexpectedToken,
-                Diagnostic::Error::Icon::ErrorIconCurlyBracesCross, lexer->span,
-                "other cases are not implemented yet.");
+            return new IO::Format::Types::Vector<Diagnostic::Error*>(
+                {new Diagnostic::Error(
+                    Diagnostic::Error::Type::ErrorTypeUnexpectedToken,
+                    Diagnostic::Error::Icon::ErrorIconCurlyBracesCross,
+                    lexer->span, "expected statement.")});
     }
-
-    return new Diagnostic::Error(
-        Diagnostic::Error::Type::ErrorTypeUnexpectedToken,
-        Diagnostic::Error::Icon::ErrorIconCurlyBracesCross, lexer->span,
-        "expected statement.");
-}
-
-Beam::Diagnostic::Result<Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
-                         Beam::Diagnostic::Error*>
-Beam::Text::Parser::Parser::parseName() {
-    if (currentIsReservedWord()) {
-        // not implemented yet.
-    }
-
-    return parseExpression();
 }
 
 Beam::Diagnostic::Result<
@@ -74,42 +63,71 @@ Beam::Text::Parser::Parser::parseBlock(const Lexer::Token::Type& until) {
     auto tree = IO::Format::Types::Vector<Syntax::AbstractSyntaxTree*>({});
     auto errors = new IO::Format::Types::Vector<Diagnostic::Error*>({});
 
-    while (true) {
-        if (current.isSuccess() && current.getValue()->getType() == until) {
-            break;
-        }
-
+    while (current.isSuccess() && current.getValue()->getType() != until) {
         auto next = parseNext();
 
         if (next.isSuccess()) {
-            auto semiColonCheck = eat({Lexer::Token::Type::SemiColon});
+            if (!dynamic_cast<Syntax::Primary::Block*>(next.getValue())) {
+                auto semiColonCheck = eat({Lexer::Token::Type::SemiColon});
 
-            if (semiColonCheck.isFailure()) {
-                errors->push_back(semiColonCheck.getError());
+                if (semiColonCheck.isFailure()) {
+                    errors->push_back(semiColonCheck.getError());
+                }
             }
 
             tree.push_back(next.getValue());
         } else {
-            errors->push_back(next.getError());
+            errors->insert(errors->end(), next.getError()->begin(),
+                           next.getError()->end());
         }
     }
 
+    eat({until});
+
     if (errors->empty()) {
-        return new Syntax::Block(tree);
+        return new Syntax::Primary::Block(tree);
     } else {
         return errors;
     }
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
-                         Beam::Diagnostic::Error*>
-Beam::Text::Parser::Parser::parseExpression() {
-    DefineAndReturnIfError(expression, parseListExpression());
-    return new Syntax::Expression(expression.getValue());
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
+Beam::Text::Parser::Parser::parseName() {
+    if (currentIsReservedWord()) {
+        return parseReservedWord();
+    }
+
+    return parseExpression();
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
+Beam::Text::Parser::Parser::parseReservedWord() {
+    if (current.getValue()->getValue() == "if" ||
+        current.getValue()->getValue() == "while") {
+        return parseConditionalStatement();
+    }
+}
+
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
+Beam::Text::Parser::Parser::parseConditionalStatement() {}
+
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
+Beam::Text::Parser::Parser::parseExpression() {
+    DefineAndReturnIfError(expression, parseListExpression());
+    return new Syntax::Primary::Expression(expression.getValue());
+}
+
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseListExpression() {
     DefineAndReturnIfError(left, parseAssignmentExpression());
     auto targets = std::vector<Lexer::Token::Type>({Lexer::Token::Type::Comma});
@@ -128,8 +146,9 @@ Beam::Text::Parser::Parser::parseListExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseAssignmentExpression() {
     DefineAndReturnIfError(left, parseLogicalOrExpression());
     auto targets = std::vector<Lexer::Token::Type>(
@@ -155,8 +174,9 @@ Beam::Text::Parser::Parser::parseAssignmentExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseLogicalOrExpression() {
     DefineAndReturnIfError(left, parseLogicalAndExpression());
     auto targets =
@@ -176,8 +196,9 @@ Beam::Text::Parser::Parser::parseLogicalOrExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseLogicalAndExpression() {
     DefineAndReturnIfError(left, parseBitwiseOrExpression());
     auto targets =
@@ -197,8 +218,9 @@ Beam::Text::Parser::Parser::parseLogicalAndExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseBitwiseOrExpression() {
     DefineAndReturnIfError(left, parseBitwiseXorExpression());
     auto targets = std::vector<Lexer::Token::Type>({Lexer::Token::Type::Pipe});
@@ -217,8 +239,9 @@ Beam::Text::Parser::Parser::parseBitwiseOrExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseBitwiseXorExpression() {
     DefineAndReturnIfError(left, parseBitwiseAndExpression());
     auto targets = std::vector<Lexer::Token::Type>({Lexer::Token::Type::Caret});
@@ -237,8 +260,9 @@ Beam::Text::Parser::Parser::parseBitwiseXorExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseBitwiseAndExpression() {
     DefineAndReturnIfError(left, parseEqualityExpression());
     auto targets =
@@ -258,8 +282,9 @@ Beam::Text::Parser::Parser::parseBitwiseAndExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseEqualityExpression() {
     DefineAndReturnIfError(left, parseRelationalExpression());
     auto targets = std::vector<Lexer::Token::Type>(
@@ -280,8 +305,9 @@ Beam::Text::Parser::Parser::parseEqualityExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseRelationalExpression() {
     DefineAndReturnIfError(left, parseShiftExpression());
     auto targets = std::vector<Lexer::Token::Type>(
@@ -303,8 +329,9 @@ Beam::Text::Parser::Parser::parseRelationalExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseShiftExpression() {
     DefineAndReturnIfError(left, parseAdditiveExpression());
     auto targets = std::vector<Lexer::Token::Type>(
@@ -325,8 +352,9 @@ Beam::Text::Parser::Parser::parseShiftExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseAdditiveExpression() {
     DefineAndReturnIfError(left, parseMultiplicativeExpression());
     auto targets = std::vector<Lexer::Token::Type>(
@@ -346,8 +374,9 @@ Beam::Text::Parser::Parser::parseAdditiveExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseMultiplicativeExpression() {
     DefineAndReturnIfError(left, parseUnaryExpression());
     auto targets = std::vector<Lexer::Token::Type>(
@@ -368,8 +397,9 @@ Beam::Text::Parser::Parser::parseMultiplicativeExpression() {
     return left;
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseUnaryExpression() {
     auto _operator = current;
 
@@ -388,15 +418,17 @@ Beam::Text::Parser::Parser::parseUnaryExpression() {
     return parsePostfixExpression();
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parsePostfixExpression() {
     auto expression = parseLiteralExpression();
     return expression; // not implemented yet
 }
 
-Beam::Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                         Beam::Diagnostic::Error*>
+Beam::Diagnostic::Result<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
 Beam::Text::Parser::Parser::parseLiteralExpression() {
     switch (current.getValue()->getType()) {
         case Beam::Text::Lexer::Token::Type::Identifier: {
@@ -429,11 +461,19 @@ Beam::Text::Parser::Parser::parseLiteralExpression() {
             return Expression::Literal::String(value);
         }
 
+        case Beam::Text::Lexer::Token::Type::LeftParenthesis: {
+            eat({current.getValue()->getType()});
+            auto expression = parseListExpression();
+            eat({Lexer::Token::Type::RightParenthesis});
+            return expression;
+        }
+
         default:
-            return new Diagnostic::Error(
-                Diagnostic::Error::Type::ErrorTypeUnexpectedToken,
-                Diagnostic::Error::Icon::ErrorIconCurlyBracesCross, lexer->span,
-                "other cases are not implemented yet.");
+            return new IO::Format::Types::Vector<Diagnostic::Error*>(
+                {new Diagnostic::Error(
+                    Diagnostic::Error::Type::ErrorTypeUnexpectedToken,
+                    Diagnostic::Error::Icon::ErrorIconCurlyBracesCross,
+                    lexer->span, "other cases are not implemented yet.")});
     }
 }
 
