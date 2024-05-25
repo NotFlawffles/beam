@@ -13,13 +13,13 @@ class Source {
 
     std::filesystem::path getPath() const { return path; }
 
-    Diagnostic::Result<IO::File::Reader*, Diagnostic::Error*>
+    Diagnostic::DiResult<IO::File::Reader*, Diagnostic::Error*>
     getReader() const {
         return reader;
     }
 
   private:
     const std::filesystem::path path;
-    Diagnostic::Result<IO::File::Reader*, Diagnostic::Error*> reader;
+    Diagnostic::DiResult<IO::File::Reader*, Diagnostic::Error*> reader;
 };
 } // namespace Beam::IO::File

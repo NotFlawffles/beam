@@ -1,10 +1,11 @@
 #pragma once
 
-#include <type_traits>
-#include <typeinfo>
 #include <vector>
 
 #include "../display.hpp"
+#include "../utils/typename.hpp"
+
+#define Vec(type, value) Beam::IO::Format::Types::Vector<type>(value)
 
 namespace Beam::IO::Format::Types {
 template<typename T,
@@ -13,7 +14,7 @@ template<typename T,
              std::is_base_of<Display, std::remove_pointer_t<T>>::value>>
 class Vector: public std::vector<T>, Display {
   public:
-    Vector(const std::vector<T>& value): std::vector<T>(value) {}
+    explicit Vector(const std::vector<T>& value): std::vector<T>(value) {}
 
     std::string format() override {
         auto content = std::string("{");
@@ -31,14 +32,8 @@ class Vector: public std::vector<T>, Display {
     }
 
     std::string debug() override {
-        std::string className = typeid(T).name();
-        size_t start = className.find_last_of("0123456789") + 1;
-        size_t end = className.length();
-
-        className = className.substr(start, (end - start) - 1);
-
-        auto content =
-            std::string("Vector(value: std::vector<" + className + ">({");
+        auto content = std::string("Vector(value: std::vector<" +
+                                   Utils::Typename::Get<T>() + ">({");
 
         for (std::size_t index = 0; index < this->size(); index++) {
             content.append(this->at(index)->debug());

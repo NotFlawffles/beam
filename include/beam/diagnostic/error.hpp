@@ -5,6 +5,11 @@
 #include "../io/format/display.hpp"
 #include "../io/string/span.hpp"
 
+#define DefineAndReturnIfError(name, value)                                    \
+    auto name = value;                                                         \
+    if (name.isFailure())                                                      \
+    return name.getError()
+
 namespace Beam::Diagnostic {
 class Error: IO::Format::Display {
   public:
@@ -14,6 +19,7 @@ class Error: IO::Format::Display {
         ErrorTypeFileNotReadable,
         ErrorTypeInvalidSyntax,
         ErrorTypeUnexpectedToken,
+        ErrorTypeColorNotFound,
         ErrorTypeCount
     };
 
@@ -23,6 +29,7 @@ class Error: IO::Format::Display {
         ErrorIconFileLock,
         ErrorIconProgramCross,
         ErrorIconCurlyBracesCross,
+        ErrorIconColorLine,
         ErrorIconCount
     };
 

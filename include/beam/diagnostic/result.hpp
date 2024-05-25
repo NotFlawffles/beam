@@ -4,22 +4,60 @@
 #include <type_traits>
 
 #include "../io/format/display.hpp"
-#include "error.hpp"
 
 namespace Beam::Diagnostic {
+template<
+    typename E,
+    typename = std::enable_if_t<
+        std::is_pointer<E>::value &&
+        std::is_base_of<IO::Format::Display, std::remove_pointer_t<E>>::value>>
+class MonoResult: IO::Format::Display {
+  public:
+    MonoResult(const E& error): error(error), hasError(true) {}
+
+    MonoResult(): hasError(false) {}
+
+    bool isSuccess() const { return !hasError; }
+
+    bool isFailure() const { return hasError; }
+
+    E getError() const { return error; }
+
+    std::string format() override {
+        return isSuccess() ? "" : getError()->format();
+    };
+
+    std::string debug() override {
+        auto content = std::string("MonoResult(");
+
+        if (isSuccess()) {
+            content.append("Success(");
+        } else {
+            content.append("Failure(error: " + getError()->debug());
+        }
+
+        content.append("))");
+        return content;
+    };
+
+  private:
+    E error;
+    bool hasError;
+};
+
 template<
     typename V, typename E,
     typename = std::enable_if_t<
         std::is_pointer<V>::value && std::is_pointer<E>::value &&
         std::is_base_of<IO::Format::Display, std::remove_pointer_t<V>>::value &&
         std::is_base_of<IO::Format::Display, std::remove_pointer_t<E>>::value>>
-class Result: IO::Format::Display {
+class DiResult: IO::Format::Display {
   public:
-    Result(const V& value): value(value), hasValue(true) {}
+    DiResult(const V& value): value(value), hasValue(true) {}
 
-    Result(const E& error): error(error), hasValue(false) {}
+    DiResult(const E& error): error(error), hasValue(false) {}
 
-    Result(): hasValue(false) {}
+    DiResult(): hasValue(false) {}
 
     bool isSuccess() const { return hasValue; }
 
@@ -34,7 +72,7 @@ class Result: IO::Format::Display {
     };
 
     std::string debug() override {
-        auto content = std::string();
+        auto content = std::string("DiResult(");
 
         if (isSuccess()) {
             content.append("Success(value: " + getValue()->debug());
@@ -42,7 +80,7 @@ class Result: IO::Format::Display {
             content.append("Failure(error: " + getError()->debug());
         }
 
-        content.push_back(')');
+        content.append("))");
         return content;
     };
 

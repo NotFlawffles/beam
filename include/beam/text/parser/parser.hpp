@@ -13,14 +13,14 @@ class Parser {
     explicit Parser(Lexer::Lexer* lexer)
         : lexer(lexer), current(lexer->lexNext()) {}
 
-    Diagnostic::Result<Syntax::AbstractSyntaxTree*,
-                       IO::Format::Types::Vector<Diagnostic::Error*>*>
+    Diagnostic::DiResult<Syntax::AbstractSyntaxTree*,
+                         IO::Format::Types::Vector<Diagnostic::Error*>*>
     parse(), parseBlock(const Lexer::Token::Type& until), parseNext(),
         parseName(), parseExpression(), parseReservedWord(),
         parseConditionalStatement();
 
-    Diagnostic::Result<Beam::Text::Parser::Expression::Expression*,
-                       IO::Format::Types::Vector<Diagnostic::Error*>*>
+    Diagnostic::DiResult<Beam::Text::Parser::Expression::Expression*,
+                         IO::Format::Types::Vector<Diagnostic::Error*>*>
     parseListExpression(), parseAssignmentExpression(),
         parseLogicalOrExpression(), parseLogicalAndExpression(),
         parseBitwiseOrExpression(), parseBitwiseXorExpression(),
@@ -30,13 +30,14 @@ class Parser {
         parseUnaryExpression(), parsePostfixExpression(),
         parseLiteralExpression();
 
-    Diagnostic::Result<Lexer::Token*, Diagnostic::Error*>
-    eat(const std::vector<Lexer::Token::Type>& types);
+    Diagnostic::DiResult<Lexer::Token*, Diagnostic::Error*>
+    eat(const std::vector<Lexer::Token::Type>& types), skip();
 
     bool currentIsReservedWord() const;
 
   private:
     Lexer::Lexer* lexer;
-    Diagnostic::Result<Lexer::Token*, Diagnostic::Error*> current;
+    Diagnostic::DiResult<Lexer::Token*, Diagnostic::Error*> current;
+    Diagnostic::Error* currentError;
 };
 } // namespace Beam::Text::Parser

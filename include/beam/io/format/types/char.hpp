@@ -1,12 +1,11 @@
 #pragma once
 
 #include "../display.hpp"
-#include <string>
 
 namespace Beam::IO::Format::Types {
 class Char: Display {
   public:
-    Char(const char& value): value(value) {}
+    explicit Char(const char& value): value(value) {}
 
     std::string format() override { return std::string({value}); }
 
