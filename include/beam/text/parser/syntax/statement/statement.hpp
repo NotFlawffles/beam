@@ -5,7 +5,7 @@
 namespace Beam::Text::Parser::Syntax::Statement {
 class Statement: public AbstractSyntaxTree {
   public:
-    enum class Type { Conditional };
+    enum class Type { Conditional, Return, Declaration };
 
     Statement(const Type& type)
         : AbstractSyntaxTree(AbstractSyntaxTree::Type::Statement),

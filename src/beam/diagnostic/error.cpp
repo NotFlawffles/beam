@@ -18,10 +18,10 @@ std::string Beam::Diagnostic::Error::format() {
               new IO::Format::Colors::Color(
                   IO::Format::Colors::Color::Type::ColorTypeRed)}}));
 
-    return colorscheme.color("#{icon}(" + getIcon() + ')').format() + '\t' +
-           colorscheme.color("#{type}(" + getTypeAsString() + ')').format() +
+    return colorscheme.color("#{icon}(" + getIcon() + "#)").format() + '\t' +
+           colorscheme.color("#{type}(" + getTypeAsString() + "#)").format() +
            ' ' + span.format() + ": " +
-           colorscheme.color("#{message}(" + message + ')').format();
+           colorscheme.color("#{message}(" + message + "#)").format();
 }
 
 std::string Beam::Diagnostic::Error::debug() {

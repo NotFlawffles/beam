@@ -2,9 +2,12 @@
 
 std::string Beam::Text::Parser::Syntax::Statement::Conditional::If::format() {
     return (getCondition() ? "if" : "else") +
-           (getCondition() ? (" (" + getCondition()->format() + ") ") : " ") +
+           (getCondition() ? (' ' + getCondition()->format() + ' ') : " ") +
            getBlock()->format() +
-           (getElseClause() ? ' ' + getElseClause()->format() : "");
+           (getElseClause()
+                ? +(getElseClause()->getCondition() ? " else " : " ") +
+                      getElseClause()->format()
+                : "");
 }
 
 std::string Beam::Text::Parser::Syntax::Statement::Conditional::If::debug() {

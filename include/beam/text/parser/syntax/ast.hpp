@@ -5,7 +5,7 @@
 namespace Beam::Text::Parser::Syntax {
 class AbstractSyntaxTree: IO::Format::Display {
   public:
-    enum class Type { Primary, Statement };
+    enum class Type { Primary, Statement, Anotation };
 
     AbstractSyntaxTree(const Type& type): type(type) {}
 

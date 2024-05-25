@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../io/format/display.hpp"
+#include "../../io/format/types/string.hpp"
 #include "../../io/string/span.hpp"
 
 namespace Beam::Text::Lexer {
@@ -72,13 +73,14 @@ class Token: IO::Format::Display {
     std::string getValue() const { return value; }
 
     std::string getTypeAsString() const;
+    static std::string getTypeAsString(const Token::Type& type);
 
     std::string format() override;
 
     std::string debug() override;
 
   private:
-    const Type type;
+    Type type;
     IO::String::Span span;
     const std::string value;
 };

@@ -38,21 +38,22 @@ Beam::IO::Format::Colors::Colorscheme::color(const std::string& target) const {
 
                 current = target[*span.getIndex() += 1];
 
-                while (*span.getIndex() < target.length() && current != ')') {
+                while (*span.getIndex() < target.length() && current != '#') {
                     currentColorSequenceValue.push_back(current);
                     current = target[*span.getIndex() += 1];
                 }
 
-                if (current != ')') {
+                if (current != '#' &&
+                    (current = target[*span.getIndex() += 1]) != ')') {
                     return new Diagnostic::Error(
                         Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
                         Diagnostic::Error::Icon::ErrorIconProgramCross,
                         span.withColumnOf(*span.getIndex() + 1),
                         "unterminated color sequence "
-                        "near value"); // there is a
-                                       // #{special}(special)
-                                       // text here.
+                        "near value");
                 }
+
+                current = target[*span.getIndex() += 1];
 
                 if (colors.has(new Types::String(currentColorSequenceKey))) {
                     result->append(

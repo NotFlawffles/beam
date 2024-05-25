@@ -16,6 +16,13 @@ class Vector: public std::vector<T>, Display {
   public:
     explicit Vector(const std::vector<T>& value): std::vector<T>(value) {}
 
+    std::string formatNoBraces() {
+        auto result = format();
+        result.erase(0, 1);
+        result.erase(result.length() - 1);
+        return result;
+    }
+
     std::string format() override {
         auto content = std::string("{");
 

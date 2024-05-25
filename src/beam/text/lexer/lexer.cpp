@@ -254,9 +254,13 @@ Beam::Text::Lexer::Lexer::lexSlash() {
         case '*': {
             auto start = span.clone();
 
+            advance();
+
             while (true) {
-                if (advance() == '*') {
-                    if (advance() == '/') {
+                if (current == '*') {
+                    advance();
+
+                    if (current == '/') {
                         break;
                     }
                 } else if (current == '\0') {
@@ -270,8 +274,11 @@ Beam::Text::Lexer::Lexer::lexSlash() {
                     *span.getRow() += 1;
                     *span.getColumn() = 0;
                 }
+
+                advance();
             }
 
+            advance();
             return lexNext();
         }
 

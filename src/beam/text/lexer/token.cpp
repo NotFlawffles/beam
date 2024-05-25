@@ -18,128 +18,134 @@ std::string Beam::Text::Lexer::Token::getTypeAsString() const {
             return "String";
 
         case Type::Plus:
-            return "+";
+            return "`+`";
 
         case Type::Minus:
-            return "-";
+            return "`-`";
 
         case Type::Asterisk:
-            return "*";
+            return "`*`";
 
         case Type::Slash:
-            return "/";
+            return "`/`";
 
         case Type::Modulo:
-            return "%";
+            return "`%`";
 
         case Type::Ampersand:
-            return "&";
+            return "`&`";
 
         case Type::Pipe:
-            return "|";
+            return "`|`";
 
         case Type::Caret:
-            return "^";
+            return "`^`";
 
         case Type::Tilde:
-            return "~";
+            return "`~`";
 
         case Type::DoubleLessThan:
-            return "<<";
+            return "`<<`";
 
         case Type::DoubleGreaterThan:
-            return ">>";
+            return "`>>`";
 
         case Type::Exclamation:
-            return "!";
+            return "`!`";
 
         case Type::Assign:
-            return "=";
+            return "`=`";
 
         case Type::ExclamationAssign:
-            return "!=";
+            return "`!=`";
 
         case Type::DoubleAssign:
-            return "==";
+            return "`==`";
 
         case Type::DoubleAmpersand:
-            return "&&";
+            return "`&&`";
 
         case Type::DoublePipe:
-            return "||";
+            return "`||`";
 
         case Type::LessThan:
-            return "<";
+            return "`<`";
 
         case Type::GreaterThan:
-            return ">";
+            return "`>";
 
         case Type::LessThanAssign:
-            return "<=";
+            return "`<=`";
 
         case Type::GreaterThanAssign:
-            return ">=";
+            return "`>=`";
 
         case Type::PlusAssign:
-            return "+=";
+            return "`+=`";
 
         case Type::MinusAssign:
-            return "-=";
+            return "`-=`";
 
         case Type::AsteriskAssign:
-            return "*=";
+            return "`*=`";
 
         case Type::SlashAssign:
-            return "/=";
+            return "`/=`";
 
         case Type::ModuloAssign:
-            return "%=";
+            return "`%=`";
 
         case Type::AmpersandAssign:
-            return "&=";
+            return "`&=`";
 
         case Type::PipeAssign:
-            return "|=";
+            return "`|=`";
 
         case Type::CaretAssign:
-            return "^=";
+            return "`^=`";
 
         case Type::DoubleLessThanAssign:
-            return "<<=";
+            return "`<<=`";
 
         case Type::DoubleGreaterThanAssign:
-            return ">>=";
+            return "`>>=`";
 
         case Type::LeftParenthesis:
-            return "(";
+            return "`(`";
 
         case Type::RightParenthesis:
-            return ")";
+            return "`)`";
 
         case Type::LeftCurlyBrace:
-            return "{";
+            return "`{`";
 
         case Type::RightCurlyBrace:
-            return "}";
+            return "`}`";
 
         case Type::Comma:
-            return ",";
+            return "`,`";
 
         case Type::Colon:
-            return ":";
+            return "`:`";
 
         case Type::SemiColon:
-            return ";";
+            return "`;`";
 
         case Type::Unhandled:
-            return "Type::Unhandled";
+            return "Unhandled";
 
         case Type::EndOfFile:
-            return "Type::EndOfFile";
+            return "EndOfFile";
 
         default:
             return "Unreachable";
     }
+}
+
+std::string Beam::Text::Lexer::Token::getTypeAsString(const Token::Type& type) {
+    auto copy = Token();
+    copy.type = type;
+    return copy.getTypeAsString();
 }
 
 std::string Beam::Text::Lexer::Token::format() {

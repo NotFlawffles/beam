@@ -1,1 +1,17 @@
-1 + 2 * 3;
+let sky: string = "gay";
+let magic_number: int = -28981;
+
+// 	SCOPE!!!
+
+    if sky == "gay" {
+	return "returning from outside function~ uwu";
+    } else if magic_number == ~(69 * 420) {
+	/* do nothing */
+    } else {
+	magic_number = 0
+
+	while magic_number < 10 {
+	    magic_number += 1;
+	}
+    }
+}

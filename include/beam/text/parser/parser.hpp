@@ -10,14 +10,14 @@
 namespace Beam::Text::Parser {
 class Parser {
   public:
-    explicit Parser(Lexer::Lexer* lexer)
-        : lexer(lexer), current(lexer->lexNext()) {}
+    explicit Parser(Lexer::Lexer* lexer): lexer(lexer) {}
 
     Diagnostic::DiResult<Syntax::AbstractSyntaxTree*,
                          IO::Format::Types::Vector<Diagnostic::Error*>*>
     parse(), parseBlock(const Lexer::Token::Type& until), parseNext(),
-        parseName(), parseExpression(), parseReservedWord(),
-        parseConditionalStatement();
+        parseName(), parseExpression(), parseReservedWord(), parseIfStatement(),
+        parseWhileStatement(), parseReturnStatement(), parseAnotationType(),
+        parseDeclaration();
 
     Diagnostic::DiResult<Beam::Text::Parser::Expression::Expression*,
                          IO::Format::Types::Vector<Diagnostic::Error*>*>
