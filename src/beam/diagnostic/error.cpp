@@ -3,31 +3,39 @@
 
 #include "../../../include/beam/diagnostic/error.hpp"
 #include "../../../include/beam/io/file/reader.hpp"
-#include "../../../include/beam/io/format/colors.hpp"
+#include "../../../include/beam/io/format/color/colorscheme.hpp"
 
 std::string Beam::Diagnostic::Error::format() {
-    auto colorscheme = IO::Format::Colors::Colorscheme(
+    auto colorscheme = IO::Format::Color::Colorscheme(
         IO::Format::Types::Map<IO::Format::Types::String*,
-                               IO::Format::Colors::Color*>(
+                               IO::Format::Color::Color*>(
             {{new IO::Format::Types::String("head"),
-              new IO::Format::Colors::Color(
-                  IO::Format::Colors::Color::Type::ColorTypeBlue)},
+              new IO::Format::Color::Color(
+                  IO::Format::Color::Color::Type::ColorTypeBlue)},
              {new IO::Format::Types::String("type"),
-              new IO::Format::Colors::Color(
-                  IO::Format::Colors::Color::Type::ColorTypeYellow)},
+              new IO::Format::Color::Color(
+                  IO::Format::Color::Color::Type::ColorTypeYellow)},
              {new IO::Format::Types::String("message"),
-              new IO::Format::Colors::Color(
-                  IO::Format::Colors::Color::Type::ColorTypeRed)}}));
+              new IO::Format::Color::Color(
+                  IO::Format::Color::Color::Type::ColorTypeRed)}}));
 
     auto row = message.find("EndOfFile.") != std::string::npos
                    ? *span.getRow() - 1
                    : *span.getRow();
 
-    auto line = IO::File::ReaderBase<IO::File::Reader*>::New(
-                    "inaccessible by Beam::Diagnostic::Error",
-                    span.getPath().substr(0, span.getPath().length() - 1))
-                    .getValue()
-                    ->readLine(row);
+    auto reader = IO::File::ReaderBase<IO::File::Reader*>::New(
+                      "inaccessible by Beam::Diagnostic::Error",
+                      span.getPath().substr(0, span.getPath().length() - 1))
+                      .getValue();
+
+    auto previousLine = reader->readLine(row - 2);
+    auto line = reader->readLine(row);
+    auto nextLine = reader->readLine(row + 1);
+
+    char emptiness =
+        (previousLine.empty() << 2) | (line.empty() << 1) | (nextLine.empty());
+
+    *span.getColumn() -= (std::to_string(row) + " | ").length();
 
     if (row != *span.getRow()) {
         *span.getRow() = row;
@@ -36,14 +44,21 @@ std::string Beam::Diagnostic::Error::format() {
         *span.getLength() = 1;
     }
 
+    *span.getColumn() += (std::to_string(row) + " | ").length();
+
     return colorscheme.color("#{head}(" + getIcon() + "#)").format() + '\t' +
            colorscheme.color("#{type}(" + getTypeAsString() + "#)").format() +
            ' ' + span.format() + ": " +
-           colorscheme.color("#{message}(" + message + "#)\n\n#{head}(- at#)\t")
-               .format() +
-           (line.empty() ? "inaccessible"
-                         : colorscheme.color(line, "message", span).format()) +
-           '\n';
+           colorscheme.color("#{message}(" + message + "#)\n\n").format() +
+           '\t' + std::to_string(row - 1) + " | " +
+           (emptiness & 0x4 ? "..." : previousLine) + "\n" +
+           colorscheme.color("#{head}(- at#)\t").format() +
+           std::to_string(row) + " | " +
+           (emptiness & 0x2
+                ? "[Failed to read] --- please report an issue."
+                : colorscheme.color(line, "message", span).format()) +
+           "\n\t" + std::to_string(row + 1) + " | " +
+           (emptiness & 0x1 ? "..." : nextLine) + '\n';
 }
 
 std::string Beam::Diagnostic::Error::debug() {

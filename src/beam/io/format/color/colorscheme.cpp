@@ -1,8 +1,8 @@
-#include "../../../../include/beam/io/format/colors.hpp"
+#include "../../../../../include/beam/io/format/color/colorscheme.hpp"
 
 Beam::Diagnostic::DiResult<Beam::IO::Format::Types::String*,
                            Beam::Diagnostic::Error*>
-Beam::IO::Format::Colors::Colorscheme::color(const std::string& target) const {
+Beam::IO::Format::Color::Colorscheme::color(const std::string& target) const {
     auto span = String::Span("color parser", "", 0, 1, 1, target.length());
 
     auto current = target[*span.getIndex()];
@@ -83,9 +83,9 @@ Beam::IO::Format::Colors::Colorscheme::color(const std::string& target) const {
 
 Beam::Diagnostic::DiResult<Beam::IO::Format::Types::String*,
                            Beam::Diagnostic::Error*>
-Beam::IO::Format::Colors::Colorscheme::color(const std::string& target,
-                                             const std::string& which,
-                                             String::Span& span) const {
+Beam::IO::Format::Color::Colorscheme::color(const std::string& target,
+                                            const std::string& which,
+                                            String::Span& span) const {
     auto copy = target;
 
     copy.insert(*span.getColumn() - 1, "#{" + which + "}(");

@@ -1,7 +1,7 @@
 #include "../../include/beam/compiler/compiler.hpp"
 #include "../../include/beam/io/file/source.hpp"
 
-#include "../../include/beam/io/format/colors.hpp"
+#include "../../include/beam/io/format/color/colorscheme.hpp"
 #include "../../include/beam/text/parser/syntax/primary/block.hpp"
 
 #include <iostream>
@@ -33,13 +33,13 @@ int main(int argc, char** argv) {
 
     if (compilation.isFailure()) {
         std::cerr << std::endl
-                  << Beam::IO::Format::Colors::Colorscheme(
+                  << Beam::IO::Format::Color::Colorscheme(
                          Beam::IO::Format::Types::Map<
                              Beam::IO::Format::Types::String*,
-                             Beam::IO::Format::Colors::Color*>(
+                             Beam::IO::Format::Color::Color*>(
                              {{new Beam::IO::Format::Types::String("error"),
-                               new Beam::IO::Format::Colors::Color(
-                                   Beam::IO::Format::Colors::Color::Type::
+                               new Beam::IO::Format::Color::Color(
+                                   Beam::IO::Format::Color::Color::Type::
                                        ColorTypeRed)}}))
                          .color(
                              "#{error}(" +
