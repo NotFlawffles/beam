@@ -1,24 +1,10 @@
 #include <array>
-#include <iostream>
 
-#include "../../../include/beam/diagnostic/error.hpp"
+#include "../../../include/beam/diagnostic/warning.hpp"
 #include "../../../include/beam/io/file/reader.hpp"
 #include "../../../include/beam/io/format/color/colorscheme.hpp"
 
-std::string Beam::Diagnostic::Error::getTypeAsString() const {
-    return std::array<std::string, Type::ErrorTypeCount + 1> {
-        "FileNotFound",  "FileNotRegular",  "FileNotReadable",
-        "InvalidSyntax", "UnexpectedToken", "ColorNotFound"}
-        .at(errorType);
-}
-
-std::string Beam::Diagnostic::Error::getIconAsString() const {
-    return std::array<std::string, Icon::ErrorIconCount + 1> {
-        "", "󰮘", "󰈡", "󰺬", "", "󰹊"}
-        .at(icon);
-}
-
-std::string Beam::Diagnostic::Error::format() {
+std::string Beam::Diagnostic::Warning::format() {
     auto colorscheme = IO::Format::Color::Colorscheme(
         IO::Format::Types::Map<IO::Format::Types::String*,
                                IO::Format::Color::Color*>(
@@ -30,50 +16,50 @@ std::string Beam::Diagnostic::Error::format() {
                   IO::Format::Color::Color::Type::ColorTypeMagenta)},
              {new IO::Format::Types::String("message"),
               new IO::Format::Color::Color(
-                  IO::Format::Color::Color::Type::ColorTypeRed)}}));
-
-    auto row = getMessage().find("EndOfFile.") != std::string::npos
-                   ? *getSpan().getRow() - 1
-                   : *getSpan().getRow();
+                  IO::Format::Color::Color::Type::ColorTypeYellow)}}));
 
     auto reader =
         IO::File::ReaderBase<IO::File::Reader*>::New(
-            "inaccessible by Beam::Diagnostic::Error",
+            "inaccessible by Beam::Diagnostic::Warning",
             getSpan().getPath().substr(0, getSpan().getPath().length() - 1))
             .getValue();
 
-    auto previousLine = reader->readLine(row - 2);
-    auto line = reader->readLine(row);
-    auto nextLine = reader->readLine(row + 1);
+    auto previousLine = reader->readLine(*getSpan().getRow() - 2);
+    auto line = reader->readLine(*getSpan().getRow());
+    auto nextLine = reader->readLine(*getSpan().getRow() + 1);
 
     char emptiness =
         (previousLine.empty() << 2) | (line.empty() << 1) | (nextLine.empty());
-
-    if (row != *getSpan().getRow()) {
-        *getSpan().getRow() = row;
-        *getSpan().getColumn() = line.length() + 1;
-        line.append("; // <- add ';'");
-        *getSpan().getLength() = 1;
-    }
 
     return colorscheme.color("#{head}(" + getIconAsString() + "#)").format() +
            '\t' +
            colorscheme.color("#{type}(" + getTypeAsString() + "#)").format() +
            ' ' + getSpan().format() + ": " +
            colorscheme.color("#{message}(" + getMessage() + "#)\n\n").format() +
-           '\t' + std::to_string(row - 1) + " | " +
+           '\t' + std::to_string(*getSpan().getRow() - 1) + " | " +
            (emptiness & 0x4 ? "..." : previousLine) + "\n" +
            colorscheme.color("#{head}(- at#)\t").format() +
-           std::to_string(row) + " | " +
+           std::to_string(*getSpan().getRow()) + " | " +
            (emptiness & 0x2
                 ? "[Failed to read] --- please report an issue."
                 : colorscheme.color(line, "message", getSpan()).format()) +
-           "\n\t" + std::to_string(row + 1) + " | " +
+           "\n\t" + std::to_string(*getSpan().getRow() + 1) + " | " +
            (emptiness & 0x1 ? "..." : nextLine) + '\n';
 }
 
-std::string Beam::Diagnostic::Error::debug() {
-    return "Error(type: " + getTypeAsString() + ", icon: \"" +
+std::string Beam::Diagnostic::Warning::debug() {
+    return "Warning(type: " + getTypeAsString() + ", icon: \"" +
            getIconAsString() + "\", span: " + getSpan().debug() +
            ", message: \"" + getMessage() + "\")";
+}
+
+std::string Beam::Diagnostic::Warning::getTypeAsString() const {
+    return std::array<std::string, Type::WarningTypeCount + 1>(
+               {"UndeclaredName"})
+        .at((unsigned char) getType());
+}
+
+std::string Beam::Diagnostic::Warning::getIconAsString() const {
+    return std::array<std::string, Icon::WarningIconCount + 1>({{"󱄑"}})
+        .at((unsigned char) getType());
 }

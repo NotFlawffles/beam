@@ -5,7 +5,8 @@
 #include "../../../../include/beam/diagnostic/error.hpp"
 #include "../../../../include/beam/text/lexer/lexer.hpp"
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexNext() {
     switch (skipWhitespace()) {
         case '_':
@@ -88,7 +89,8 @@ Beam::Text::Lexer::Lexer::lexNext() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexIdentifier() {
     auto value = std::string();
     auto start = span.clone();
@@ -102,7 +104,8 @@ Beam::Text::Lexer::Lexer::lexIdentifier() {
                      start.withLengthOf(value.length()), value);
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexNumber() {
     auto value = std::string();
     auto start = span.clone();
@@ -141,7 +144,8 @@ Beam::Text::Lexer::Lexer::lexNumber() {
     return new Token(type, start.withLengthOf(value.length()), value);
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexCharacter() {
     char value;
     auto start = span.clone();
@@ -171,7 +175,8 @@ Beam::Text::Lexer::Lexer::lexCharacter() {
         new Token(Token::Type::Character, start.withLengthOf(length), {value}));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexString() {
     auto value = std::string();
     auto start = span.clone();
@@ -200,7 +205,8 @@ Beam::Text::Lexer::Lexer::lexString() {
         Token::Type::String, start.withLengthOf(value.length() + 2), value));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexPlus() {
     auto start = span.clone().withLengthOf(1);
 
@@ -214,7 +220,8 @@ Beam::Text::Lexer::Lexer::lexPlus() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexMinus() {
     auto start = span.clone().withLengthOf(1);
 
@@ -228,7 +235,8 @@ Beam::Text::Lexer::Lexer::lexMinus() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexAsterisk() {
     auto start = span.clone().withLengthOf(1);
 
@@ -242,7 +250,8 @@ Beam::Text::Lexer::Lexer::lexAsterisk() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexSlash() {
     auto start = span.clone().withLengthOf(1);
 
@@ -292,7 +301,8 @@ Beam::Text::Lexer::Lexer::lexSlash() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexModulo() {
     auto start = span.clone().withLengthOf(1);
 
@@ -306,7 +316,8 @@ Beam::Text::Lexer::Lexer::lexModulo() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexAmpersand() {
     auto start = span.clone().withLengthOf(1);
 
@@ -324,7 +335,8 @@ Beam::Text::Lexer::Lexer::lexAmpersand() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexPipe() {
     auto start = span.clone().withLengthOf(1);
 
@@ -342,7 +354,8 @@ Beam::Text::Lexer::Lexer::lexPipe() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexCaret() {
     auto start = span.clone().withLengthOf(1);
 
@@ -356,13 +369,15 @@ Beam::Text::Lexer::Lexer::lexCaret() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexTilde() {
     return advanceWithResult(
         new Token(Token::Type::Tilde, span.clone().withLengthOf(1)));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexLessThan() {
     auto start = span.clone().withLengthOf(1);
 
@@ -388,7 +403,8 @@ Beam::Text::Lexer::Lexer::lexLessThan() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexGreaterThan() {
     auto start = span.clone().withLengthOf(1);
 
@@ -414,7 +430,8 @@ Beam::Text::Lexer::Lexer::lexGreaterThan() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexExclamation() {
     auto start = span.clone().withLengthOf(1);
 
@@ -428,7 +445,8 @@ Beam::Text::Lexer::Lexer::lexExclamation() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexAssign() {
     auto start = span.clone().withLengthOf(1);
 
@@ -442,7 +460,8 @@ Beam::Text::Lexer::Lexer::lexAssign() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexBrace() {
     auto start = span.clone().withLengthOf(1);
 
@@ -468,45 +487,51 @@ Beam::Text::Lexer::Lexer::lexBrace() {
     }
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexComma() {
     return advanceWithResult(
         new Token(Token::Type::Comma, span.clone().withLengthOf(1)));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexColon() {
     return advanceWithResult(
         new Token(Token::Type::Colon, span.clone().withLengthOf(1)));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexSemiColon() {
     return advanceWithResult(
         new Token(Token::Type::SemiColon, span.clone().withLengthOf(1)));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexUnhandled() {
     return advanceWithResult(new Token(
         Token::Type::Unhandled, span.clone().withLengthOf(1), {current}));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexEndOfFile() {
     return new Token(Token::Type::EndOfFile, span.clone().withLengthOf(1));
 }
 
-Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
+Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::advanceWithResult(
     const Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*,
-                                     Beam::Diagnostic::Error*>& result) {
+                                     Beam::Diagnostic::Diagnostic*>& result) {
     advance();
     return result;
 }
 
 Beam::Diagnostic::DiResult<Beam::IO::Format::Types::Char*,
-                           Beam::Diagnostic::Error*>
+                           Beam::Diagnostic::Diagnostic*>
 Beam::Text::Lexer::Lexer::lexEscapeSequence() {
     return std::unordered_map<char, IO::Format::Types::Char*> {
         {'a', new IO::Format::Types::Char('\a')},

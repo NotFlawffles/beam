@@ -1,7 +1,7 @@
 #include "../../../../../include/beam/io/format/color/colorscheme.hpp"
 
 Beam::Diagnostic::DiResult<Beam::IO::Format::Types::String*,
-                           Beam::Diagnostic::Error*>
+                           Beam::Diagnostic::Diagnostic*>
 Beam::IO::Format::Color::Colorscheme::color(const std::string& target) const {
     auto span = String::Span("color parser", "", 0, 1, 1, target.length());
 
@@ -82,10 +82,10 @@ Beam::IO::Format::Color::Colorscheme::color(const std::string& target) const {
 }
 
 Beam::Diagnostic::DiResult<Beam::IO::Format::Types::String*,
-                           Beam::Diagnostic::Error*>
+                           Beam::Diagnostic::Diagnostic*>
 Beam::IO::Format::Color::Colorscheme::color(const std::string& target,
                                             const std::string& which,
-                                            String::Span& span) const {
+                                            String::Span span) const {
     auto copy = target;
 
     copy.insert(*span.getColumn() - 1, "#{" + which + "}(");

@@ -15,7 +15,7 @@ class Parser {
         : lexer(lexer), current(lexer->lexNext()) {}
 
     Diagnostic::DiResult<Syntax::AbstractSyntaxTree*,
-                         IO::Format::Types::Vector<Diagnostic::Error*>*>
+                         IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
     parse(), parseBlock(const Lexer::Token::Type& until), parseNext(),
         parseName(), parseExpression(), parseReservedWord(), parseIfStatement(),
         parseWhileStatement(), parseReturnStatement(), parseAnnotationType(),
@@ -27,17 +27,17 @@ class Parser {
         parseDoStatement();
 
     Diagnostic::DiResult<IO::Format::Types::Char*,
-                         IO::Format::Types::Vector<Diagnostic::Error*>*>
+                         IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
     parseDeclarationFlags();
 
     Diagnostic::DiResult<
         IO::Format::Types::Vector<
             Syntax::Statement::Declaration::Function::Parameter*>*,
-        IO::Format::Types::Vector<Diagnostic::Error*>*>
+        IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
     parseFunctionParameters();
 
     Diagnostic::DiResult<Beam::Text::Parser::Expression::Expression*,
-                         IO::Format::Types::Vector<Diagnostic::Error*>*>
+                         IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
     parseListExpression(), parseAssignmentExpression(),
         parseLogicalOrExpression(), parseLogicalAndExpression(),
         parseBitwiseOrExpression(), parseBitwiseXorExpression(),
@@ -48,20 +48,20 @@ class Parser {
         parseLiteralExpression();
 
     Diagnostic::DiResult<IO::Format::Types::String*,
-                         IO::Format::Types::Vector<Diagnostic::Error*>*>
+                         IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
     getName() const;
 
-    Diagnostic::DiResult<Lexer::Token*, Diagnostic::Error*>
+    Diagnostic::DiResult<Lexer::Token*, Diagnostic::Diagnostic*>
     eat(const std::vector<Lexer::Token::Type>& types), skip();
 
-    Diagnostic::DiResult<IO::Format::Types::String*, Diagnostic::Error*>
+    Diagnostic::DiResult<IO::Format::Types::String*, Diagnostic::Diagnostic*>
     expect(const std::vector<std::string>& names) const;
 
     bool currentIsReservedWord() const;
 
   private:
     Lexer::Lexer* lexer;
-    Diagnostic::DiResult<Lexer::Token*, Diagnostic::Error*> current;
-    Diagnostic::Error* currentError;
+    Diagnostic::DiResult<Lexer::Token*, Diagnostic::Diagnostic*> current;
+    Diagnostic::Diagnostic* currentError;
 };
 } // namespace Beam::Text::Parser

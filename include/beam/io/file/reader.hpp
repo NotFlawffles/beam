@@ -26,7 +26,7 @@ class Reader: Format::Display {
 
 template<typename Derived> class ReaderBase: Format::Display {
   public:
-    static Diagnostic::DiResult<Derived, Diagnostic::Error*>
+    static Diagnostic::DiResult<Derived, Diagnostic::Diagnostic*>
     New(const char* executableName, const std::filesystem::path& path) {
 
         auto fileNameStart = std::string(executableName).length() + 1;

@@ -13,12 +13,10 @@ class Colorscheme: Display {
     Colorscheme(const Types::Map<Types::String*, Color*>& colors)
         : colors(colors) {}
 
-    Diagnostic::DiResult<Types::String*, Diagnostic::Error*>
-    color(const std::string& target) const;
-
-    Diagnostic::DiResult<Types::String*, Diagnostic::Error*>
-    color(const std::string& target, const std::string& which,
-          String::Span& span) const;
+    Diagnostic::DiResult<Types::String*, Diagnostic::Diagnostic*>
+    color(const std::string& target) const,
+        color(const std::string& target, const std::string& which,
+              String::Span span) const;
 
     std::string format() override { return colors.format(); }
 

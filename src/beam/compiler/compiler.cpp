@@ -6,10 +6,11 @@
 
 Beam::Diagnostic::DiResult<
     Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
-    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Error*>*>
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Diagnostic*>*>
 Beam::Compiler::compile(const Beam::IO::File::Source& source) {
     if (source.getReader().isFailure()) {
-        return new Vec(Diagnostic::Error*, {source.getReader().getError()});
+        return new Vec(Diagnostic::Diagnostic*,
+                       {source.getReader().getError()});
     }
 
     auto lexer = Beam::Text::Lexer::Lexer(source);

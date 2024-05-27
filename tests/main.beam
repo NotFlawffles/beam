@@ -2,7 +2,7 @@ let pub EXIT_SUCCESS: int = 0;
 let pub EXIT_FAILURE: int = 1;
 
 let pub main(argc: int, argv: char**): int {
-    let argc_plus_one: int = argc + 1
+    let argc_plus_one: int = argc + 1;
     let mut index: int = -1;
     let mut starts_with_n: bool = false;
 

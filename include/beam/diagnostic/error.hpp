@@ -4,6 +4,7 @@
 
 #include "../io/format/display.hpp"
 #include "../io/string/span.hpp"
+#include "diagnostic.hpp"
 
 #define DefineAndReturnIfError(name, value)                                    \
     auto name = value;                                                         \
@@ -22,7 +23,7 @@
     return new Vec(errorType, {name.getError()})
 
 namespace Beam::Diagnostic {
-class Error: IO::Format::Display {
+class Error: public Diagnostic {
   public:
     enum Type : unsigned char {
         ErrorTypeFileNotFound,
@@ -46,23 +47,21 @@ class Error: IO::Format::Display {
 
     Error(const Type& type, const Icon& icon, const IO::String::Span& span,
           const std::string& message)
-        : type(type), icon(icon), span(span), message(message) {}
+        : Diagnostic(Diagnostic::Type::Error, span, message), errorType(type),
+          icon(icon) {}
 
     explicit Error()
-        : type(Type::ErrorTypeFileNotFound),
+        : Diagnostic(Diagnostic::Type::Error),
+          errorType(Type::ErrorTypeFileNotFound),
           icon(Icon::ErrorIconFileQuestionMark) {}
 
-    unsigned char getNumber() const { return type; }
+    unsigned char getNumber() const { return errorType; }
 
-    std::string format() override, debug() override;
+    std::string getTypeAsString() const, getIconAsString() const,
+        format() override, debug() override;
 
   private:
-    std::string getTypeAsString() const;
-    std::string getIcon() const;
-
-    const Type type;
+    const Type errorType;
     const Icon icon;
-    IO::String::Span span;
-    const std::string message;
 };
 } // namespace Beam::Diagnostic

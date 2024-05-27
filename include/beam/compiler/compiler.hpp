@@ -8,6 +8,6 @@
 
 namespace Beam::Compiler {
 Diagnostic::DiResult<Text::Parser::Syntax::AbstractSyntaxTree*,
-                     IO::Format::Types::Vector<Diagnostic::Error*>*>
+                     IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
 compile(const IO::File::Source& source);
 }
