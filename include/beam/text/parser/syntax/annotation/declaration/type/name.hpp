@@ -2,7 +2,7 @@
 
 #include "type.hpp"
 
-namespace Beam::Text::Parser::Syntax::Anotation::Type {
+namespace Beam::Text::Parser::Syntax::Annotation::Declaration::Type {
 class Name: public Type {
   public:
     explicit Name(IO::Format::Types::String* value)
@@ -15,4 +15,4 @@ class Name: public Type {
   private:
     IO::Format::Types::String* value;
 };
-} // namespace Beam::Text::Parser::Syntax::Anotation::Type
+} // namespace Beam::Text::Parser::Syntax::Annotation::Declaration::Type

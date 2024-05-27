@@ -1,28 +1,37 @@
 #pragma once
 
-#include "../../anotation/type/type.hpp"
+#include "../../../../../io/format/types/char.hpp"
+#include "../../annotation/declaration/flags.hpp"
+#include "../../annotation/declaration/type/type.hpp"
 #include "../statement.hpp"
 
 namespace Beam::Text::Parser::Syntax::Statement::Declaration {
 class Declaration: public Statement {
   public:
-    enum class Type { Variable, Function };
+    enum class Type { Variable, Function, FunctionParameter };
 
     explicit Declaration(const Type& declarationType,
-                         Anotation::Type::Type* anotationType, std::string name)
+                         Annotation::Declaration::Type::Type* anotationType,
+                         Annotation::Declaration::Flags* flags,
+                         std::string name)
         : Statement(Statement::Type::Declaration),
           declarationType(declarationType), anotationType(anotationType),
-          name(name) {}
+          flags(flags), name(name) {}
 
     Type getDeclarationType() const { return declarationType; }
 
-    Anotation::Type::Type* getAnotationType() const { return anotationType; }
+    Annotation::Declaration::Type::Type* getAnotationType() const {
+        return anotationType;
+    }
+
+    Annotation::Declaration::Flags* getFlags() const { return flags; }
 
     std::string getName() const { return name; }
 
   private:
     const Type declarationType;
-    Anotation::Type::Type* anotationType;
+    Annotation::Declaration::Type::Type* anotationType;
+    Annotation::Declaration::Flags* flags;
     const std::string name;
 };
 } // namespace Beam::Text::Parser::Syntax::Statement::Declaration

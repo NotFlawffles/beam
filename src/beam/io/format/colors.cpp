@@ -80,3 +80,18 @@ Beam::IO::Format::Colors::Colorscheme::color(const std::string& target) const {
 
     return result;
 }
+
+Beam::Diagnostic::DiResult<Beam::IO::Format::Types::String*,
+                           Beam::Diagnostic::Error*>
+Beam::IO::Format::Colors::Colorscheme::color(const std::string& target,
+                                             const std::string& which,
+                                             String::Span& span) const {
+    auto copy = target;
+
+    copy.insert(*span.getColumn() - 1, "#{" + which + "}(");
+    copy.insert(*span.getColumn() - 1 + *span.getLength() +
+                    ("#{" + which + "})").length(),
+                "#)");
+
+    return color(copy);
+}

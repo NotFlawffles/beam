@@ -2,10 +2,7 @@
 #include "../../include/beam/io/file/source.hpp"
 
 #include "../../include/beam/io/format/colors.hpp"
-#include "../../include/beam/text/parser/syntax/anotation/type/pointer.hpp"
-#include "../../include/beam/text/parser/syntax/anotation/type/type.hpp"
 #include "../../include/beam/text/parser/syntax/primary/block.hpp"
-#include "../../include/beam/text/parser/syntax/statement/declaration/variable.hpp"
 
 #include <iostream>
 
@@ -25,7 +22,12 @@ int main(int argc, char** argv) {
         }
     } else {
         for (auto error : *compilation.getError()) {
-            std::cerr << error->format() << std::endl;
+            if (!error) {
+                continue;
+            }
+
+            std::cerr << (argv[2] ? error->debug() : error->format())
+                      << std::endl;
         }
     }
 

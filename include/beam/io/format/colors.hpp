@@ -43,6 +43,10 @@ class Colorscheme: Display {
     Diagnostic::DiResult<Types::String*, Diagnostic::Error*>
     color(const std::string& target) const;
 
+    Diagnostic::DiResult<Types::String*, Diagnostic::Error*>
+    color(const std::string& target, const std::string& which,
+          String::Span& span) const;
+
     std::string format() override { return colors.format(); }
 
     std::string debug() override {

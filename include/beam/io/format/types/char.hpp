@@ -7,6 +7,8 @@ class Char: Display {
   public:
     explicit Char(const char& value): value(value) {}
 
+    char getValue() const { return value; }
+
     std::string format() override { return std::string({value}); }
 
     std::string debug() override {

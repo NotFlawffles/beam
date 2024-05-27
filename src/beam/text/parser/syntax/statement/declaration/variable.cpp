@@ -2,12 +2,13 @@
 
 std::string
 Beam::Text::Parser::Syntax::Statement::Declaration::Variable::format() {
-    return "let " + getName() + ": " + getAnotationType()->format() + " = " +
-           getValue()->format();
+    return "let " + getFlags()->format() + ' ' + getName() + ": " +
+           getAnotationType()->format() + " = " + getValue()->format();
 }
 
 std::string
 Beam::Text::Parser::Syntax::Statement::Declaration::Variable::debug() {
     return "Variable(anotationType: " + getAnotationType()->debug() +
-           ", name: " + getName() + ", value: " + getValue()->debug() + ')';
+           ", flags: " + getFlags()->debug() + ", name: " + getName() +
+           ", value: " + getValue()->debug() + ')';
 }

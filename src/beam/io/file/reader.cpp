@@ -1,6 +1,5 @@
 #include "../../../../include/beam/io/file/reader.hpp"
 #include "../../../../include/beam/io/string/span.hpp"
-#include "../../../../include/beam/io/string/utils.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -9,18 +8,23 @@ std::string Beam::IO::File::Reader::readAll() const { return content; }
 
 std::string
 Beam::IO::File::Reader::readLine(const unsigned long long int& index) {
-    return String::Utils::splitString(content, '\n').at(index);
+    std::stringstream stream(content);
+    std::string line;
+    unsigned long long int currentLine = 0;
+
+    while (std::getline(stream, line, '\n')) {
+        if (currentLine == index - 1) {
+            return line;
+        }
+
+        currentLine++;
+    }
+
+    return "";
 }
 
 std::string Beam::IO::File::Reader::format() {
-    auto content = std::string("-- " + path + " --\n");
-
-    for (std::size_t index = 0;
-         index < String::Utils::splitString(readAll(), '\n').size(); index++) {
-        content.append(std::to_string(index) + '\t' + readLine(index) + '\n');
-    }
-
-    return content;
+    return "-- " + path + " --\n" + readAll() + '\n';
 }
 
 std::string Beam::IO::File::Reader::debug() {

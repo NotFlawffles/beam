@@ -114,7 +114,10 @@ Beam::Text::Lexer::Lexer::lexNumber() {
                 return advanceWithResult(new Diagnostic::Error(
                     Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
                     Diagnostic::Error::Icon::ErrorIconProgramCross,
-                    span.clone().withLengthOf(value.length() + 1), "odd '.'"));
+                    start.clone()
+                        .withLengthOf(value.length() - 1)
+                        .withLengthOf(value.length()),
+                    "odd '.'"));
             }
 
             type = Token::Type::Float;
@@ -124,14 +127,16 @@ Beam::Text::Lexer::Lexer::lexNumber() {
         advance();
     }
 
-    if (value == "." || (value.length() && value.at(value.length() - 1) == '.'))
+    if (value == "." ||
+        (value.length() && value.at(value.length() - 1) == '.')) {
         return advanceWithResult(new Diagnostic::Error(
             Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
             Diagnostic::Error::Icon::ErrorIconProgramCross,
-            span.clone()
-                .withColumnOf(*span.getColumn() - 1)
+            start.clone()
+                .withLengthOf(value.length() - 1)
                 .withLengthOf(value.length()),
             "odd '.'"));
+    }
 
     return new Token(type, start.withLengthOf(value.length()), value);
 }
@@ -140,7 +145,7 @@ Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexCharacter() {
     char value;
     auto start = span.clone();
-    auto length = 2;
+    auto length = 3;
 
     if (advance() == '\\') {
         auto escapeSequence = lexEscapeSequence();
@@ -149,21 +154,21 @@ Beam::Text::Lexer::Lexer::lexCharacter() {
             return advanceWithResult(escapeSequence.getError());
         }
 
-        value = escapeSequence.getValue()->debug().at(0);
+        value = escapeSequence.getValue()->getValue();
         length++;
     } else {
         value = current;
     }
 
     if (advance() != '\'') {
-        return new Diagnostic::Error(
+        return advanceWithResult(new Diagnostic::Error(
             Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
             Diagnostic::Error::Icon::ErrorIconProgramCross,
-            start.withLengthOf(length), "unterminated character sequence");
+            start.withLengthOf(length), "unterminated character sequence"));
     }
 
-    return new Token(Token::Type::Character, start.withLengthOf(length),
-                     {value});
+    return advanceWithResult(
+        new Token(Token::Type::Character, start.withLengthOf(length), {value}));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
@@ -192,7 +197,7 @@ Beam::Text::Lexer::Lexer::lexString() {
     }
 
     return advanceWithResult(new Token(
-        Token::Type::String, start.withLengthOf(value.length()), value));
+        Token::Type::String, start.withLengthOf(value.length() + 2), value));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
@@ -353,7 +358,8 @@ Beam::Text::Lexer::Lexer::lexCaret() {
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexTilde() {
-    return advanceWithResult(new Token(Token::Type::Tilde, span));
+    return advanceWithResult(
+        new Token(Token::Type::Tilde, span.clone().withLengthOf(1)));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
@@ -438,52 +444,57 @@ Beam::Text::Lexer::Lexer::lexAssign() {
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexBrace() {
+    auto start = span.clone().withLengthOf(1);
+
     switch (current) {
         case '(':
             return advanceWithResult(
-                new Token(Token::Type::LeftParenthesis, span));
+                new Token(Token::Type::LeftParenthesis, start));
 
         case ')':
             return advanceWithResult(
-                new Token(Token::Type::RightParenthesis, span));
+                new Token(Token::Type::RightParenthesis, start));
 
         case '{':
             return advanceWithResult(
-                new Token(Token::Type::LeftCurlyBrace, span));
+                new Token(Token::Type::LeftCurlyBrace, start));
 
         case '}':
             return advanceWithResult(
-                new Token(Token::Type::RightCurlyBrace, span));
+                new Token(Token::Type::RightCurlyBrace, start));
 
         default:
-            return advanceWithResult(new Token(Token::Type::Unhandled, span));
+            return advanceWithResult(new Token(Token::Type::Unhandled, start));
     }
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexComma() {
-    return advanceWithResult(new Token(Token::Type::Comma, span));
+    return advanceWithResult(
+        new Token(Token::Type::Comma, span.clone().withLengthOf(1)));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexColon() {
-    return advanceWithResult(new Token(Token::Type::Colon, span));
+    return advanceWithResult(
+        new Token(Token::Type::Colon, span.clone().withLengthOf(1)));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexSemiColon() {
-    return advanceWithResult(new Token(Token::Type::SemiColon, span));
+    return advanceWithResult(
+        new Token(Token::Type::SemiColon, span.clone().withLengthOf(1)));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexUnhandled() {
-    return advanceWithResult(
-        new Token(Token::Type::Unhandled, span, {current}));
+    return advanceWithResult(new Token(
+        Token::Type::Unhandled, span.clone().withLengthOf(1), {current}));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>
 Beam::Text::Lexer::Lexer::lexEndOfFile() {
-    return new Token(Token::Type::EndOfFile, span);
+    return new Token(Token::Type::EndOfFile, span.clone().withLengthOf(1));
 }
 
 Beam::Diagnostic::DiResult<Beam::Text::Lexer::Token*, Beam::Diagnostic::Error*>

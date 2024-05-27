@@ -10,6 +10,17 @@
     if (name.isFailure())                                                      \
     return name.getError()
 
+#define DefineAndReturnVecIfError(name, errorType, value)                      \
+    auto name = value;                                                         \
+    if (name.isFailure())                                                      \
+    return new Vec(errorType, {name.getError()})
+
+#define DefineAndReturnVecIfErrorAndSkip(name, errorType, value)               \
+    auto name = value;                                                         \
+    skip();                                                                    \
+    if (name.isFailure())                                                      \
+    return new Vec(errorType, {name.getError()})
+
 namespace Beam::Diagnostic {
 class Error: IO::Format::Display {
   public:

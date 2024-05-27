@@ -7,14 +7,9 @@
 namespace Beam::Text::Parser::Syntax::Statement::Conditional {
 class While: public Conditional {
   public:
-    While(Primary::Expression* condition, Primary::Block* block)
-        : Conditional(Conditional::Type::While, condition), block(block) {}
-
-    Primary::Block* getBlock() const { return block; }
+    While(Primary::Expression* condition, Primary::Block* body)
+        : Conditional(Conditional::Type::While, condition, body) {}
 
     std::string format() override, debug() override;
-
-  private:
-    Primary::Block* block;
 };
 } // namespace Beam::Text::Parser::Syntax::Statement::Conditional

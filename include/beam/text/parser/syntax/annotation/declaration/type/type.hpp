@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../../../../io/format/types/string.hpp"
-#include "../../ast.hpp"
+#include "../../../../../../io/format/types/string.hpp"
+#include "../../../ast.hpp"
 
-namespace Beam::Text::Parser::Syntax::Anotation::Type {
+namespace Beam::Text::Parser::Syntax::Annotation::Declaration::Type {
 class Type: public AbstractSyntaxTree {
   public:
     enum class Kind { Name, Pointer };
@@ -16,4 +16,4 @@ class Type: public AbstractSyntaxTree {
   private:
     const Kind kind;
 };
-} // namespace Beam::Text::Parser::Syntax::Anotation::Type
+} // namespace Beam::Text::Parser::Syntax::Annotation::Declaration::Type

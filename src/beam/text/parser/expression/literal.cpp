@@ -39,7 +39,7 @@ std::string Beam::Text::Parser::Expression::Literal::format() {
             return std::string({'\'', characterValue, '\''});
 
         case Type::String:
-            return stringValue;
+            return '\"' + stringValue + '\"';
 
         default:
             return "Unreachable";

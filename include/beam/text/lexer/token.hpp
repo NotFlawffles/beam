@@ -70,6 +70,8 @@ class Token: IO::Format::Display {
 
     Type getType() const { return type; }
 
+    IO::String::Span getSpan() const { return span; }
+
     std::string getValue() const { return value; }
 
     std::string getTypeAsString() const;
