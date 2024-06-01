@@ -20,9 +20,9 @@ class Parser {
         parseName(), parseExpression(), parseReservedWord(), parseIfStatement(),
         parseWhileStatement(), parseReturnStatement(), parseAnnotationType(),
         parseDeclaration(),
-        parseVariableDeclaration(const std::string& name,
+        parseVariableDeclaration(const IO::Format::Types::String& name,
                                  IO::Format::Types::Char* flags),
-        parseFunctionDeclaration(const std::string& name,
+        parseFunctionDeclaration(const IO::Format::Types::String& name,
                                  IO::Format::Types::Char* flags),
         parseDoStatement();
 

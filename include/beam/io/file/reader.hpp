@@ -38,14 +38,15 @@ template<typename Derived> class ReaderBase: Format::Display {
                 Diagnostic::Error::Icon::ErrorIconFileQuestionMark,
                 IO::String::Span("command line input", "", fileNameStart, 1,
                                  fileNameStart + 1, pathAsString.length()),
-                "could not find file `" + pathAsString + '`');
+                "could not find file `" + pathAsString + '`', false);
         } else if (!std::filesystem::is_regular_file(path)) {
             return new Diagnostic::Error(
                 Diagnostic::Error::Type::ErrorTypeFileNotRegular,
                 Diagnostic::Error::Icon::ErrorIconFileCross,
                 IO::String::Span("command line input", "", fileNameStart, 1,
                                  fileNameStart + 1, pathAsString.length()),
-                "specified file is not a regular `" + pathAsString + '`');
+                "specified file is not a regular `" + pathAsString + '`',
+                false);
         } else if ((std::filesystem::status(path).permissions() &
                     std::filesystem::perms::others_read) ==
                    std::filesystem::perms::none) {
@@ -54,7 +55,7 @@ template<typename Derived> class ReaderBase: Format::Display {
                 Diagnostic::Error::Icon::ErrorIconFileLock,
                 IO::String::Span("command line input", "", fileNameStart, 1,
                                  fileNameStart + 1, pathAsString.length()),
-                "could not read file `" + pathAsString + '`');
+                "could not read file `" + pathAsString + '`', false);
         }
 
         std::ifstream file(path);

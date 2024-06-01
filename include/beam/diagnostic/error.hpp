@@ -18,9 +18,10 @@
 
 #define DefineAndReturnVecIfErrorAndSkip(name, errorType, value)               \
     auto name = value;                                                         \
-    skip();                                                                    \
-    if (name.isFailure())                                                      \
-    return new Vec(errorType, {name.getError()})
+    if (name.isFailure()) {                                                    \
+        skip();                                                                \
+        return new Vec(errorType, {name.getError()});                          \
+    }
 
 namespace Beam::Diagnostic {
 class Error: public Diagnostic {
@@ -32,6 +33,8 @@ class Error: public Diagnostic {
         ErrorTypeInvalidSyntax,
         ErrorTypeUnexpectedToken,
         ErrorTypeColorNotFound,
+        ErrorTypeMismatchedTypes,
+        ErrorTypeRedefinition,
         ErrorTypeCount
     };
 
@@ -42,18 +45,19 @@ class Error: public Diagnostic {
         ErrorIconProgramCross,
         ErrorIconCurlyBracesCross,
         ErrorIconColorLine,
+        ErrorIconName,
         ErrorIconCount
     };
 
     Error(const Type& type, const Icon& icon, const IO::String::Span& span,
-          const std::string& message)
+          const std::string& message, const bool& showSource = true)
         : Diagnostic(Diagnostic::Type::Error, span, message), errorType(type),
-          icon(icon) {}
+          icon(icon), showSource(showSource) {}
 
     explicit Error()
         : Diagnostic(Diagnostic::Type::Error),
           errorType(Type::ErrorTypeFileNotFound),
-          icon(Icon::ErrorIconFileQuestionMark) {}
+          icon(Icon::ErrorIconFileQuestionMark), showSource(false) {}
 
     unsigned char getNumber() const { return errorType; }
 
@@ -63,5 +67,6 @@ class Error: public Diagnostic {
   private:
     const Type errorType;
     const Icon icon;
+    const bool showSource;
 };
 } // namespace Beam::Diagnostic

@@ -1,13 +1,15 @@
 #pragma once
 
 #include "../../../../../io/format/types/char.hpp"
+#include "../annotation.hpp"
 
 namespace Beam::Text::Parser::Syntax::Annotation::Declaration {
-class Flags: IO::Format::Display {
+class Flags: public Annotation {
   public:
     enum Type { Public = 1, Private = 2, Mutable = 4, Immutable = 8 };
 
-    explicit Flags(IO::Format::Types::Char* value): value(value) {}
+    explicit Flags(IO::Format::Types::Char* value)
+        : Annotation(Annotation::Type::Flags), value(value) {}
 
     IO::Format::Types::Char* getValue() const { return value; }
 

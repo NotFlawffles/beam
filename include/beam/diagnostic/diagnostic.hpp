@@ -3,10 +3,19 @@
 #include "../io/format/display.hpp"
 #include "../io/string/span.hpp"
 
+#define AppendIfFailure(diagnostics, target)                                   \
+    if (target.isFailure())                                                    \
+    diagnostics->push_back(target.getError())
+
+#define InsertIfFailure(diagnostics, target)                                   \
+    if (target.isFailure())                                                    \
+    diagnostics->insert(diagnostics->end(), target.getError()->begin(),        \
+                        target.getError()->end())
+
 namespace Beam::Diagnostic {
 class Diagnostic: public IO::Format::Display {
   public:
-    enum class Type { Error, Warning };
+    enum class Type { Error, Warning, Note };
 
     Diagnostic(const Type& type, const IO::String::Span span,
                const std::string& message)
@@ -16,13 +25,13 @@ class Diagnostic: public IO::Format::Display {
 
     Type getType() const { return type; }
 
-    IO::String::Span getSpan() { return span; }
+    IO::String::Span getSpan() const { return span; }
 
     std::string getMessage() const { return message; }
 
   private:
     const Type type;
-    IO::String::Span span;
+    const IO::String::Span span;
     const std::string message;
 };
 } // namespace Beam::Diagnostic

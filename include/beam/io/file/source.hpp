@@ -11,6 +11,8 @@ class Source {
         : path(path), reader(IO::File::ReaderBase<IO::File::Reader*>::New(
                           executableName, path)) {}
 
+    explicit Source() {}
+
     std::filesystem::path getPath() const { return path; }
 
     Diagnostic::DiResult<IO::File::Reader*, Diagnostic::Diagnostic*>

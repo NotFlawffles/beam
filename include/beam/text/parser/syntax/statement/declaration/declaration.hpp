@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../../io/format/types/char.hpp"
+#include "../../../../../io/format/types/string.hpp"
 #include "../../annotation/declaration/flags.hpp"
 #include "../../annotation/declaration/type/type.hpp"
 #include "../statement.hpp"
@@ -13,7 +13,7 @@ class Declaration: public Statement {
     explicit Declaration(const Type& declarationType,
                          Annotation::Declaration::Type::Type* anotationType,
                          Annotation::Declaration::Flags* flags,
-                         std::string name)
+                         const IO::Format::Types::String& name)
         : Statement(Statement::Type::Declaration),
           declarationType(declarationType), anotationType(anotationType),
           flags(flags), name(name) {}
@@ -26,12 +26,12 @@ class Declaration: public Statement {
 
     Annotation::Declaration::Flags* getFlags() const { return flags; }
 
-    std::string getName() const { return name; }
+    IO::Format::Types::String getName() const { return name; }
 
   private:
     const Type declarationType;
     Annotation::Declaration::Type::Type* anotationType;
     Annotation::Declaration::Flags* flags;
-    const std::string name;
+    const IO::Format::Types::String name;
 };
 } // namespace Beam::Text::Parser::Syntax::Statement::Declaration

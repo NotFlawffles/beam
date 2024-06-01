@@ -8,8 +8,8 @@ namespace Beam::Text::Parser::Syntax::Statement::Declaration {
 class Variable: public Declaration {
   public:
     Variable(Annotation::Declaration::Type::Type* anotationType,
-             Annotation::Declaration::Flags* flags, const std::string& name,
-             Primary::Expression* value)
+             Annotation::Declaration::Flags* flags,
+             const IO::Format::Types::String& name, Primary::Expression* value)
         : Declaration(Declaration::Type::Variable, anotationType, flags, name),
           value(value) {}
 

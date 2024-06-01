@@ -22,33 +22,53 @@ int main(int argc, char** argv) {
         }
     } else {
         for (auto error : *compilation.getError()) {
-            if (!error) {
-                continue;
-            }
-
             std::cerr << (argv[2] ? error->debug() : error->format())
+                      << std::endl
                       << std::endl;
         }
     }
 
     if (compilation.isFailure()) {
-        std::cerr << std::endl
-                  << Beam::IO::Format::Color::Colorscheme(
-                         Beam::IO::Format::Types::Map<
-                             Beam::IO::Format::Types::String*,
-                             Beam::IO::Format::Color::Color*>(
-                             {{new Beam::IO::Format::Types::String("error"),
-                               new Beam::IO::Format::Color::Color(
-                                   Beam::IO::Format::Color::Color::Type::
-                                       ColorTypeRed)}}))
-                         .color(
-                             "#{error}(" +
-                             std::to_string(compilation.getError()->size()) +
-                             " error" +
-                             (compilation.getError()->size() > 1 ? "s " : " ") +
-                             "generated.#)")
-                         .format()
+        auto colorscheme = Beam::IO::Format::Color::Colorscheme(
+            Beam::IO::Format::Types::Map<Beam::IO::Format::Types::String*,
+                                         Beam::IO::Format::Color::Color*>(
+                {{new Beam::IO::Format::Types::String("error"),
+                  new Beam::IO::Format::Color::Color(
+                      Beam::IO::Format::Color::Color::Type::ColorTypeRed)},
+                 {new Beam::IO::Format::Types::String("warning"),
+                  new Beam::IO::Format::Color::Color(
+                      Beam::IO::Format::Color::Color::Type::
+                          ColorTypeYellow)}}));
 
-                  << std::endl;
+        auto errors = 0, warnings = 0;
+
+        for (const auto& diagnostic : *compilation.getError()) {
+            if (diagnostic->getType() ==
+                Beam::Diagnostic::Diagnostic::Type::Error) {
+                errors++;
+            } else if (diagnostic->getType() ==
+                       Beam::Diagnostic::Diagnostic::Type::Warning) {
+                warnings++;
+            }
+        }
+
+        auto message = std::string();
+
+        if (errors) {
+            message.append("#{error}(" + std::to_string(errors) + " errors#)");
+        }
+
+        if (warnings) {
+            if (errors) {
+                message.append(", ");
+            }
+
+            message.append("#{warning}(" + std::to_string(warnings) +
+                           " warnings#)");
+        }
+
+        message.append(" generated.");
+
+        std::cerr << colorscheme.color(message).format() << std::endl;
     }
 }

@@ -49,8 +49,7 @@ Beam::IO::Format::Color::Colorscheme::color(const std::string& target) const {
                         Diagnostic::Error::Type::ErrorTypeInvalidSyntax,
                         Diagnostic::Error::Icon::ErrorIconProgramCross,
                         span.withColumnOf(*span.getIndex() + 1),
-                        "unterminated color sequence "
-                        "near value");
+                        "unterminated color sequence near value");
                 }
 
                 current = target[*span.getIndex() += 1];

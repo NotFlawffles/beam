@@ -9,7 +9,8 @@ namespace Beam::Text::Parser::Syntax::Statement::Declaration::Function {
 class Function: public Declaration {
   public:
     Function(Annotation::Declaration::Type::Type* type,
-             Annotation::Declaration::Flags* flags, const std::string& name,
+             Annotation::Declaration::Flags* flags,
+             const IO::Format::Types::String& name,
              IO::Format::Types::Vector<Parameter*>* parameters,
              Primary::Block* body)
         : Declaration(Declaration::Type::Function, type, flags, name),

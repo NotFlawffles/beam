@@ -9,39 +9,57 @@ class Literal: public Expression {
 
     Literal(const Type& literalType, const std::string& nameValue,
             const std::string& stringValue, const std::size_t& integerValue,
-            const float& floatValue, const char& characterValue)
+            const float& floatValue, const char& characterValue,
+            const IO::String::Span& span)
         : Expression(Expression::Type::Literal), literalType(literalType),
           nameValue(nameValue), stringValue(stringValue),
           integerValue(integerValue), floatValue(floatValue),
-          characterValue(characterValue) {}
+          characterValue(characterValue), span(span) {}
 
-    static Literal* Name(const std::string& value) {
+    static Literal* Name(const std::string& value,
+                         const IO::String::Span& span) {
         return new Literal(Type::Name, value, value, value.length(),
-                           value.length(), value.at(0));
+                           value.length(), value.at(0), span);
     }
 
-    static Literal* Integer(const std::size_t& value) {
+    static Literal* Integer(const std::size_t& value,
+                            const IO::String::Span& span) {
         return new Literal(Type::Integer, "integer", std::to_string(value),
-                           value, value, value);
+                           value, value, value, span);
     }
 
-    static Literal* Float(const float& value) {
+    static Literal* Float(const float& value, const IO::String::Span& span) {
         return new Literal(Type::Float, "float", std::to_string(value), value,
-                           value, value);
+                           value, value, span);
     }
 
-    static Literal* Character(const char& value) {
+    static Literal* Character(const char& value, const IO::String::Span& span) {
         return new Literal(Type::Character, "character", std::to_string(value),
-                           value, value, value);
+                           value, value, value, span);
     }
 
-    static Literal* String(const std::string& value) {
+    static Literal* String(const std::string& value,
+                           const IO::String::Span& span) {
         return new Literal(Type::String, value, value, value.length(),
-                           value.length(), value.at(0));
+                           value.length(), value.at(0), span);
     }
+
+    Type getLiteralType() const { return literalType; }
+
+    IO::String::Span getSpan() const { return span; }
 
     std::string getLiteralTypeAsString() const, format() override,
         debug() override;
+
+    std::string getNameValue() const { return nameValue; }
+
+    std::string getStringValue() const { return stringValue; }
+
+    std::size_t getIntegerValue() const { return integerValue; }
+
+    float getFloatValue() const { return floatValue; }
+
+    char getCharacterValue() const { return characterValue; }
 
   private:
     const Type literalType;
@@ -51,5 +69,7 @@ class Literal: public Expression {
     std::size_t integerValue;
     float floatValue;
     char characterValue;
+
+    const IO::String::Span span;
 };
 } // namespace Beam::Text::Parser::Expression

@@ -5,9 +5,17 @@
 namespace Beam::Diagnostic {
 class Warning: public Diagnostic {
   public:
-    enum Type : unsigned char { WarningTypeUndeclaredName, WarningTypeCount };
+    enum Type : unsigned char {
+        WarningTypeUnknownType,
+        WarningTypeUndeclaredName,
+        WarningTypeCount
+    };
 
-    enum Icon : unsigned char { WarningIconName, WarningIconCount };
+    enum Icon : unsigned char {
+        WarningIconRectangle,
+        WarningIconName,
+        WarningIconCount
+    };
 
     Warning(const Type& type, const Icon& icon, const IO::String::Span& span,
             const std::string& message)
@@ -16,8 +24,7 @@ class Warning: public Diagnostic {
 
     explicit Warning()
         : Diagnostic(Diagnostic::Type::Warning),
-          warningType(Type::WarningTypeUndeclaredName),
-          icon(Icon::WarningIconName) {}
+          warningType(Type::WarningTypeCount), icon(Icon::WarningIconCount) {}
 
     unsigned char getNumber() const { return warningType; }
 

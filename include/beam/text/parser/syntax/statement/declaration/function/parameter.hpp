@@ -7,7 +7,8 @@ namespace Beam::Text::Parser::Syntax::Statement::Declaration::Function {
 class Parameter: public Declaration {
   public:
     Parameter(Annotation::Declaration::Type::Type* type,
-              Annotation::Declaration::Flags* flags, const std::string& name)
+              Annotation::Declaration::Flags* flags,
+              const IO::Format::Types::String& name)
         : Declaration(Declaration::Type::FunctionParameter, type, flags, name) {
     }
 

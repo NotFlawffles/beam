@@ -4,15 +4,14 @@
 
 Beam::IO::Format::Types::String* Beam::Text::Parser::Syntax::Annotation::
     Declaration::Type::Pointer::getTypeName() const {
-    auto type =
-        dynamic_cast<Annotation::Declaration::Type::Type*>(new Pointer(*this));
+    auto type = dynamic_cast<Declaration::Type::Type*>(new Pointer(*this));
 
     while (Compiler::Utils::isDynamicallyCastableTo<
-           typename Annotation::Declaration::Type::Type*, Pointer*>(type)) {
+           typename Declaration::Type::Type*, Pointer*>(type)) {
         type = dynamic_cast<Pointer*>(type)->getTypeType();
     }
 
-    return dynamic_cast<Annotation::Declaration::Type::Name*>(type)->getValue();
+    return dynamic_cast<Declaration::Type::Name*>(type)->getValue();
 }
 
 unsigned long long int
@@ -20,11 +19,10 @@ Beam::Text::Parser::Syntax::Annotation::Declaration::Type::Pointer::getDepth()
     const {
     auto depth = 0;
 
-    auto type =
-        dynamic_cast<Annotation::Declaration::Type::Type*>(new Pointer(*this));
+    auto type = dynamic_cast<Declaration::Type::Type*>(new Pointer(*this));
 
     while (Compiler::Utils::isDynamicallyCastableTo<
-           typename Annotation::Declaration::Type::Type*, Pointer*>(type)) {
+           typename Declaration::Type::Type*, Pointer*>(type)) {
         type = dynamic_cast<Pointer*>(type)->getTypeType();
         depth++;
     }
