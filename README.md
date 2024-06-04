@@ -6,7 +6,7 @@
 - [x] Diagnosis, resulting and erroring systems.
 - [x] Lexer.
 - [x] Parser.
-- [-] Scoping; with typechecker.    (ongoing)
+- [ ] Scoping; with typechecker.    (ongoing)
 - [ ] Code generator / Interpreter (Not decided yet).
 ...
 #### --- other stuff to be discovered later ---
