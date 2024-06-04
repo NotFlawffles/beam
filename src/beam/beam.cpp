@@ -52,6 +52,10 @@ int main(int argc, char** argv) {
             }
         }
 
+        if (!(errors | warnings)) {
+            return 0;
+        }
+
         auto message = std::string();
 
         if (errors) {

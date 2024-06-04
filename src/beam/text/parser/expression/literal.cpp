@@ -7,6 +7,9 @@ Beam::Text::Parser::Expression::Literal::getLiteralTypeAsString() const {
         case Type::Name:
             return "Name";
 
+        case Type::FunctionCall:
+            return "FunctionCall";
+
         case Type::Integer:
             return "Integer";
 
@@ -28,6 +31,9 @@ std::string Beam::Text::Parser::Expression::Literal::format() {
     switch (literalType) {
         case Type::Name:
             return nameValue;
+
+        case Type::FunctionCall:
+            return nameValue + '(' + getArguments()->formatNoBraces() + ')';
 
         case Type::Integer:
             return std::to_string(integerValue);
@@ -53,6 +59,11 @@ std::string Beam::Text::Parser::Expression::Literal::debug() {
     switch (literalType) {
         case Type::Name:
             content.append(nameValue);
+            break;
+
+        case Type::FunctionCall:
+            content.append(nameValue +
+                           ", arguments: " + getArguments()->debug());
             break;
 
         case Type::Integer:

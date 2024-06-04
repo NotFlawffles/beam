@@ -562,33 +562,8 @@ Beam::Diagnostic::DiResult<
     Beam::Text::Parser::Syntax::AbstractSyntaxTree*,
     Beam::IO::Format::Types::Vector<Beam::Diagnostic::Diagnostic*>*>
 Beam::Text::Parser::Parser::parseExpression() {
-    DefineAndReturnIfError(expression, parseListExpression());
+    DefineAndReturnIfError(expression, parseAssignmentExpression());
     return new Syntax::Primary::Expression(expression.getValue());
-}
-
-Beam::Diagnostic::DiResult<
-    Beam::Text::Parser::Expression::Expression*,
-    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Diagnostic*>*>
-Beam::Text::Parser::Parser::parseListExpression() {
-    auto leftSpan = current.getValue()->getSpan();
-    DefineAndReturnIfError(left, parseAssignmentExpression());
-    auto targets = std::vector<Lexer::Token::Type>({Lexer::Token::Type::Comma});
-
-    if (current.isSuccess() &&
-        std::find(targets.begin(), targets.end(),
-                  current.getValue()->getType()) != targets.end()) {
-        auto operatorSpan = current.getValue()->getSpan();
-        auto _operator = Expression::Operator::FromToken(*current.getValue());
-        EatAndReturnIfError(targets);
-        auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
-
-        left =
-            new Expression::Binary(left.getValue(), _operator, right.getValue(),
-                                   leftSpan, rightSpan, operatorSpan);
-    }
-
-    return left;
 }
 
 Beam::Diagnostic::DiResult<
@@ -613,7 +588,7 @@ Beam::Text::Parser::Parser::parseAssignmentExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -639,7 +614,7 @@ Beam::Text::Parser::Parser::parseLogicalOrExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -665,7 +640,7 @@ Beam::Text::Parser::Parser::parseLogicalAndExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -690,7 +665,7 @@ Beam::Text::Parser::Parser::parseBitwiseOrExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -715,7 +690,7 @@ Beam::Text::Parser::Parser::parseBitwiseXorExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -741,7 +716,7 @@ Beam::Text::Parser::Parser::parseBitwiseAndExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -768,7 +743,7 @@ Beam::Text::Parser::Parser::parseEqualityExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -796,7 +771,7 @@ Beam::Text::Parser::Parser::parseRelationalExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -823,7 +798,7 @@ Beam::Text::Parser::Parser::parseShiftExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -849,7 +824,7 @@ Beam::Text::Parser::Parser::parseAdditiveExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -876,7 +851,7 @@ Beam::Text::Parser::Parser::parseMultiplicativeExpression() {
         auto _operator = Expression::Operator::FromToken(*current.getValue());
         EatAndReturnIfError(targets);
         auto rightSpan = current.getValue()->getSpan();
-        DefineAndReturnIfError(right, parseListExpression());
+        DefineAndReturnIfError(right, parseAssignmentExpression());
 
         left =
             new Expression::Binary(left.getValue(), _operator, right.getValue(),
@@ -918,7 +893,47 @@ Beam::Diagnostic::DiResult<
     Beam::IO::Format::Types::Vector<Beam::Diagnostic::Diagnostic*>*>
 Beam::Text::Parser::Parser::parsePostfixExpression() {
     auto expression = parseLiteralExpression();
-    return expression; // not implemented yet
+
+    if (current.getValue()->getType() == Lexer::Token::Type::LeftParenthesis) {
+        return parseFunctionCall(expression.getValue());
+    }
+
+    return expression;
+}
+
+Beam::Diagnostic::DiResult<
+    Beam::Text::Parser::Expression::Expression*,
+    Beam::IO::Format::Types::Vector<Beam::Diagnostic::Diagnostic*>*>
+Beam::Text::Parser::Parser::parseFunctionCall(
+    Beam::Text::Parser::Expression::Expression* expression) {
+    auto expressionAsLiteral = dynamic_cast<Expression::Literal*>(expression);
+    auto diagnostics = new Vec(Diagnostic::Diagnostic*, {});
+    auto arguments = new Vec(Expression::Expression*, {});
+
+    EatAndReturnIfError({Lexer::Token::Type::LeftParenthesis});
+
+    while (current.isSuccess() && current.getValue()->getType() !=
+                                      Lexer::Token::Type::RightParenthesis) {
+        auto currentExpression = parseAssignmentExpression();
+
+        if (currentExpression.isFailure()) {
+            InsertIfFailure(diagnostics, currentExpression);
+            continue;
+        }
+
+        arguments->push_back(currentExpression.getValue());
+
+        if (current.isSuccess() && current.getValue()->getType() !=
+                                       Lexer::Token::Type::RightParenthesis) {
+            EatAndReturnIfError({Lexer::Token::Type::Comma});
+        }
+    }
+
+    EatAndReturnIfError({Lexer::Token::Type::RightParenthesis});
+
+    return Expression::Literal::FunctionCall(
+        expressionAsLiteral->getNameValue(), arguments,
+        expressionAsLiteral->getSpan());
 }
 
 Beam::Diagnostic::DiResult<
@@ -964,7 +979,7 @@ Beam::Text::Parser::Parser::parseLiteralExpression() {
         case Beam::Text::Lexer::Token::Type::LeftParenthesis: {
             auto span = current.getValue()->getSpan();
             EatAndReturnIfError({current.getValue()->getType()});
-            auto expression = parseListExpression();
+            auto expression = parseAssignmentExpression();
             EatAndReturnIfError({Lexer::Token::Type::RightParenthesis});
             return expression;
         }

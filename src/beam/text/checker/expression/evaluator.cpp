@@ -55,135 +55,9 @@ Beam::Text::Checker::Expression::Evaluator::evaluateBinary(
         diagnostics->push_back(new Diagnostic::Error(
             Diagnostic::Error::Type::ErrorTypeMismatchedTypes,
             Diagnostic::Error::Icon::ErrorIconProgramCross,
-            right.getValue()->getSpan(), "mismatched types."));
-    }
-
-    if (left.getValue()->getLiteralType() ==
-            Parser::Expression::Literal::Type::String ||
-        right.getValue()->getLiteralType() ==
-            Parser::Expression::Literal::Type::String) {
-        diagnostics->push_back(new Diagnostic::Error(
-            Diagnostic::Error::Type::ErrorTypeMismatchedTypes,
-            Diagnostic::Error::Icon::ErrorIconProgramCross,
-            right.getValue()->getSpan(),
-            "string manipulation is not implemented yet."));
-    }
-
-    switch (expression->getOperator()->getType()) {
-        case Parser::Expression::Operator::Type::Plus:
-            switch (left.getValue()->getLiteralType()) {
-                case Beam::Text::Parser::Expression::Literal::Type::Name:
-                    // TODO
-                    break;
-
-                case Beam::Text::Parser::Expression::Literal::Type::Integer:
-                    return Parser::Expression::Literal::Integer(
-                        left.getValue()->getIntegerValue() +
-                            right.getValue()->getIntegerValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Float:
-                    return Parser::Expression::Literal::Float(
-                        left.getValue()->getFloatValue() +
-                            right.getValue()->getFloatValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Character:
-                    return Parser::Expression::Literal::Character(
-                        left.getValue()->getCharacterValue() +
-                            right.getValue()->getCharacterValue(),
-                        expression->getOperatorSpan());
-
-                default:
-                    break;
-            }
-
-        case Parser::Expression::Operator::Type::Minus:
-            switch (left.getValue()->getLiteralType()) {
-                case Beam::Text::Parser::Expression::Literal::Type::Name:
-                    // TODO
-                    break;
-
-                case Beam::Text::Parser::Expression::Literal::Type::Integer:
-                    return Parser::Expression::Literal::Integer(
-                        left.getValue()->getIntegerValue() -
-                            right.getValue()->getIntegerValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Float:
-                    return Parser::Expression::Literal::Float(
-                        left.getValue()->getFloatValue() -
-                            right.getValue()->getFloatValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Character:
-                    return Parser::Expression::Literal::Character(
-                        left.getValue()->getCharacterValue() -
-                            right.getValue()->getCharacterValue(),
-                        expression->getOperatorSpan());
-
-                default:
-                    break;
-            }
-
-        case Parser::Expression::Operator::Type::Multiply:
-            switch (left.getValue()->getLiteralType()) {
-                case Beam::Text::Parser::Expression::Literal::Type::Name:
-                    // TODO
-                    break;
-
-                case Beam::Text::Parser::Expression::Literal::Type::Integer:
-                    return Parser::Expression::Literal::Integer(
-                        left.getValue()->getIntegerValue() *
-                            right.getValue()->getIntegerValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Float:
-                    return Parser::Expression::Literal::Float(
-                        left.getValue()->getFloatValue() *
-                            right.getValue()->getFloatValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Character:
-                    return Parser::Expression::Literal::Character(
-                        left.getValue()->getCharacterValue() *
-                            right.getValue()->getCharacterValue(),
-                        expression->getOperatorSpan());
-
-                default:
-                    break;
-            }
-
-        case Parser::Expression::Operator::Type::Divide:
-            switch (left.getValue()->getLiteralType()) {
-                case Beam::Text::Parser::Expression::Literal::Type::Name:
-                    // TODO
-                    break;
-
-                case Beam::Text::Parser::Expression::Literal::Type::Integer:
-                    return Parser::Expression::Literal::Integer(
-                        left.getValue()->getIntegerValue() /
-                            right.getValue()->getIntegerValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Float:
-                    return Parser::Expression::Literal::Float(
-                        left.getValue()->getFloatValue() /
-                            right.getValue()->getFloatValue(),
-                        expression->getOperatorSpan());
-
-                case Beam::Text::Parser::Expression::Literal::Type::Character:
-                    return Parser::Expression::Literal::Character(
-                        left.getValue()->getCharacterValue() /
-                            right.getValue()->getCharacterValue(),
-                        expression->getOperatorSpan());
-
-                default:
-                    break;
-            }
-
-        default:
-            break;
+            expression->getOperatorSpan(),
+            "mismatched types (" + left.getValue()->getLiteralTypeAsString() +
+                " and " + right.getValue()->getLiteralTypeAsString() + ")."));
     }
 
     return diagnostics;
@@ -295,9 +169,9 @@ Beam::Text::Checker::Expression::Evaluator::evaluateLiteral(
                 return new Vec(
                     Diagnostic::Diagnostic*,
                     {new Diagnostic::Note(
-                        declaration->getName() +
-                            "is a function, did you mean to call it?",
-                        declaration->getName().getSpan())});
+                        "`" + declaration->getName() +
+                            "` is a function, did you mean to call it?",
+                        expression->getSpan(), true)});
 
             case Beam::Text::Parser::Syntax::Statement::Declaration::
                 Declaration::Type::FunctionParameter:

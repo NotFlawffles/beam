@@ -38,13 +38,14 @@ class Parser {
 
     Diagnostic::DiResult<Beam::Text::Parser::Expression::Expression*,
                          IO::Format::Types::Vector<Diagnostic::Diagnostic*>*>
-    parseListExpression(), parseAssignmentExpression(),
-        parseLogicalOrExpression(), parseLogicalAndExpression(),
-        parseBitwiseOrExpression(), parseBitwiseXorExpression(),
-        parseBitwiseAndExpression(), parseEqualityExpression(),
-        parseRelationalExpression(), parseShiftExpression(),
-        parseAdditiveExpression(), parseMultiplicativeExpression(),
-        parseUnaryExpression(), parsePostfixExpression(),
+    parseAssignmentExpression(), parseLogicalOrExpression(),
+        parseLogicalAndExpression(), parseBitwiseOrExpression(),
+        parseBitwiseXorExpression(), parseBitwiseAndExpression(),
+        parseEqualityExpression(), parseRelationalExpression(),
+        parseShiftExpression(), parseAdditiveExpression(),
+        parseMultiplicativeExpression(), parseUnaryExpression(),
+        parsePostfixExpression(),
+        parseFunctionCall(Expression::Expression* expression),
         parseLiteralExpression();
 
     Diagnostic::DiResult<IO::Format::Types::String*,
